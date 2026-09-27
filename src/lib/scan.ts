@@ -159,11 +159,11 @@ export async function analyzeCoin(row: cg.CgMarket, ctx: { regime: Regime; alt7d
   const fees30 = proto ? ctx.llama.fees.get(proto.slug) ?? ctx.llama.fees.get(proto.name.toLowerCase()) ?? null : null;
 
   // Development: CoinGecko developer data, refined with GitHub when a token is configured (or in sample mode)
-  const repos = (d?.links.repos_url.github ?? []).filter(Boolean);
+  const repos = (d?.links?.repos_url?.github ?? []).filter((x): x is string => !!x);
   const repo = repos.map(oth.repoFromUrl).find(Boolean) ?? null;
-  let weekly: number[] = d?.developer_data.last_4_weeks_commit_activity_series ?? [];
+  let weekly: number[] = (d?.developer_data?.last_4_weeks_commit_activity_series ?? []).filter((x): x is number => typeof x === 'number');
   let devTrend: number | null = null, lastPushDays: number | null = null, releases: Analysis['dev']['releases'] = [];
-  let commits4w: number | null = d?.developer_data.commit_count_4_weeks ?? null;
+  let commits4w: number | null = d?.developer_data?.commit_count_4_weeks ?? null;
   let devSource = 'CoinGecko developer_data';
   if (repo && (process.env.GITHUB_TOKEN || DATA_MODE === 'SAMPLE')) {
     const part = await attempt(errors, `GitHub ${repo}`, () => oth.ghParticipation(repo));
@@ -179,18 +179,18 @@ export async function analyzeCoin(row: cg.CgMarket, ctx: { regime: Regime; alt7d
     releases = (rel?.data ?? []).map((r) => ({ name: r.name || r.tag_name, date: r.published_at, url: r.html_url }));
   }
   const catalysts = await db.select().from(schema.catalysts).where(eq(schema.catalysts.coinId, row.id));
-  const exchanges = d ? Array.from(new Map(d.tickers.filter((t) => !t.is_anomaly && !t.is_stale).map((t) => [t.market.identifier, t])).values()) : [];
+  const exchanges = d ? Array.from(new Map((d.tickers ?? []).filter((t) => t.market?.identifier && !t.is_anomaly && !t.is_stale).map((t) => [t.market!.identifier!, t])).values()) : [];
   const ageYears = d?.genesis_date ? (Date.now() - Date.parse(d.genesis_date)) / (365.25 * 86400000) : null;
 
   const facts: CoinFacts = {
-    id: row.id, symbol: row.symbol, name: row.name, categories: d?.categories?.filter(Boolean) ?? [],
+    id: row.id, symbol: row.symbol, name: row.name, categories: (d?.categories ?? []).filter((x): x is string => !!x),
     price: row.current_price, marketCap: row.market_cap, fdv: row.fully_diluted_valuation, volume24h: row.total_volume,
     circulating: row.circulating_supply, totalSupply: row.total_supply, maxSupply: row.max_supply, athChangePct: row.ath_change_percentage, rank: row.market_cap_rank, ageYears,
     tech, relBtc30d: tech?.perf30d != null && btc30 != null ? tech.perf30d - btc30 : null, relEth30d: tech?.perf30d != null && eth30 != null ? tech.perf30d - eth30 : null,
     relMarket30d: null,
     tvl: proto?.tvl ?? null, tvlChange7d: proto?.change_7d ?? null, tvlChange30d: tvl30, fees30d: fees30,
-    commits4w, contributors: d?.developer_data.pull_request_contributors ?? null, devTrend, hasRepo: d ? repos.length > 0 : null, lastPushDays, recentRelease: releases[0]?.date ?? null,
-    exchanges: d ? exchanges.length : null, hasDescription: !!d?.description.en?.trim(),
+    commits4w, contributors: d?.developer_data?.pull_request_contributors ?? null, devTrend, hasRepo: d ? repos.length > 0 : null, lastPushDays, recentRelease: releases[0]?.date ?? null,
+    exchanges: d ? exchanges.length : null, hasDescription: !!d?.description?.en?.trim(),
     catalysts: catalysts.map((c) => ({ date: c.eventDate, kind: c.kind, event: c.event, unlockPct: c.unlockPctOfSupply, resolved: c.resolved })),
     regime: ctx.regime, marketAlt7d: ctx.alt7d, today,
   };
@@ -234,20 +234,20 @@ export async function analyzeCoin(row: cg.CgMarket, ctx: { regime: Regime; alt7d
     facts, score, narrative, metrics,
     chart: chartRows.filter((r) => r.btc !== undefined || true),
     profile: {
-      description: d?.description.en?.replace(/<[^>]+>/g, '').slice(0, 1500) ?? '', homepage: d?.links.homepage.find(Boolean) ?? null,
-      twitter: d?.links.twitter_screen_name ? `https://x.com/${d.links.twitter_screen_name}` : null, github: repos.slice(0, 5), explorers: (d?.links.blockchain_site ?? []).filter(Boolean).slice(0, 3),
+      description: d?.description?.en?.replace(/<[^>]+>/g, '').slice(0, 1500) ?? '', homepage: (d?.links?.homepage ?? []).find((x): x is string => !!x) ?? null,
+      twitter: d?.links?.twitter_screen_name ? `https://x.com/${d.links.twitter_screen_name}` : null, github: repos.slice(0, 5), explorers: (d?.links?.blockchain_site ?? []).filter((x): x is string => !!x).slice(0, 3),
       platform: d?.asset_platform_id ?? null, genesis: d?.genesis_date ?? null, categories: facts.categories,
     },
-    exchanges: exchanges.sort((a, b) => b.converted_volume.usd - a.converted_volume.usd).slice(0, 10).map((t) => ({ name: t.market.name, target: t.target, volumeUsd: t.converted_volume.usd, trust: t.trust_score })),
+    exchanges: exchanges.sort((a, b) => (b.converted_volume?.usd ?? 0) - (a.converted_volume?.usd ?? 0)).slice(0, 10).map((t) => ({ name: t.market?.name ?? t.market?.identifier ?? 'Unknown', target: t.target ?? '', volumeUsd: t.converted_volume?.usd ?? 0, trust: t.trust_score ?? null })),
     dev: {
-      commits4w: m(commits4w, devSource, dAt), contributors: m(d?.developer_data.pull_request_contributors, 'CoinGecko developer_data', dAt), stars: m(d?.developer_data.stars, 'CoinGecko developer_data', dAt),
+      commits4w: m(commits4w, devSource, dAt), contributors: m(d?.developer_data?.pull_request_contributors, 'CoinGecko developer_data', dAt), stars: m(d?.developer_data?.stars, 'CoinGecko developer_data', dAt),
       lastPush: m(lastPushDays !== null ? `${lastPushDays} days ago` : null, 'GitHub /repos', dAt), weekly, releases,
     },
     onchain: {
       tvl: m(proto?.tvl, 'DeFiLlama /protocols', lAt), tvl7d: m(proto?.change_7d, 'DeFiLlama /protocols', lAt), tvl30d: m(tvl30, 'DeFiLlama /protocol history', lAt), fees30d: m(fees30, 'DeFiLlama /overview/fees', lAt), tvlHistory,
       notMeasured: ['Active addresses', 'Transaction count', 'New addresses', 'Whale activity', 'Exchange inflows/outflows', 'Holder concentration', 'Large-wallet accumulation'],
     },
-    community: { twitter: m(d?.community_data.twitter_followers, 'CoinGecko community_data', dAt), watchlists: m(d?.watchlist_portfolio_users, 'CoinGecko', dAt), sentimentUp: m(d?.sentiment_votes_up_percentage, 'CoinGecko user votes', dAt) },
+    community: { twitter: m(d?.community_data?.twitter_followers, 'CoinGecko community_data', dAt), watchlists: m(d?.watchlist_portfolio_users, 'CoinGecko', dAt), sentimentUp: m(d?.sentiment_votes_up_percentage, 'CoinGecko user votes', dAt) },
     crossCheck, news: newsItems,
     catalysts: catalysts.map((c) => ({ id: c.id, date: c.eventDate, kind: c.kind, event: c.event, significance: c.significance, risk: c.risk, sourceUrl: c.sourceUrl })),
     analyzedAt: new Date().toISOString(), dataMode: DATA_MODE,
@@ -350,7 +350,12 @@ export async function runScan(scanId: number): Promise<void> {
       }
       i++;
       await progress(scanId, `Analysing ${row.name} (${i} of ${deep.size})…`);
-      results.push({ row, a: await analyzeCoin(row, { regime: market.regime, alt7d: market.alt7d.value, btcPrices, ethPrices, llama, settings, errors, cmc }) });
+      try {
+        results.push({ row, a: await analyzeCoin(row, { regime: market.regime, alt7d: market.alt7d.value, btcPrices, ethPrices, llama, settings, errors, cmc }) });
+      } catch (e) {
+        // One coin with unusual data must not stop the whole scan.
+        errors.push({ source: `Analysis ${row.name}`, message: `Skipped: ${e instanceof Error ? e.message : String(e)}` });
+      }
     }
 
     // 6. Select the Daily 5 (eligible, no serious red flags, within risk preference, ≥50% data coverage, max 2 per sector)

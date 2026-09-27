@@ -140,7 +140,7 @@ export function sampleResponse(url: string): unknown {
     const row = marketRow(c);
     const r = rng(hash(c.id + 'd'));
     const series4 = Array.from({ length: 4 }, () => Math.max(0, Math.round((c.commits / 4) * (0.6 + r() * 0.8))));
-    return {
+    const out: Record<string, unknown> = {
       id: c.id, symbol: c.symbol, name: c.name, categories: c.cat,
       description: { en: c.kind === 'btc' || c.kind === 'eth' ? `${c.name} (sample data).` : `SAMPLE DATA — ${c.name} is a fictional ${c.cat[0].toLowerCase()} project generated for testing. It is not a real cryptocurrency.` },
       links: { homepage: [`https://example.com/${c.id}`], blockchain_site: [], twitter_screen_name: null, subreddit_url: null, repos_url: { github: c.commits > 0 || c.kind === 'dead' ? [`https://github.com/sample-org/${c.id}`] : [] } },
@@ -157,6 +157,12 @@ export function sampleResponse(url: string): unknown {
       tickers: Array.from({ length: c.exchanges }, (_, i) => ({ market: { name: `Exchange ${i + 1}`, identifier: `ex${i + 1}` }, target: 'USDT', converted_volume: { usd: row.total_volume / c.exchanges }, trust_score: i % 5 === 4 ? 'yellow' : 'green', is_anomaly: false, is_stale: c.kind === 'dead' })),
       last_updated: new Date().toISOString(),
     };
+    // Like the real API, some coins come back without developer/community sections, links or tickers.
+    const h = hash(c.id + 'gaps') % 6;
+    if (h === 0) { delete out.developer_data; delete out.community_data; }
+    if (h === 1) { delete out.links; delete out.description; }
+    if (h === 2) { delete out.tickers; }
+    return out;
   }
   if (path.endsWith('/exchange_rates')) return { rates: { usd: { value: marketRow(coins[0]).current_price, unit: '$' }, inr: { value: marketRow(coins[0]).current_price * 83.4, unit: '₹' } } };
   if (u.host === 'api.llama.fi' && path === '/protocols') {

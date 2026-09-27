@@ -37,7 +37,11 @@ export async function global() {
   return getJson<CgGlobal>({ source: `${CG} /global`, url: `${BASE}/global`, headers: headers(), ttlSeconds: 15 * 60 });
 }
 
-export type CgCoin = {
+// Real API responses can omit any section (e.g. developer_data for coins without a repo),
+// so every field is treated as possibly missing.
+type DeepPartial<T> = T extends (infer U)[] ? DeepPartial<U>[] : T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;
+export type CgCoin = DeepPartial<CgCoinFull>;
+type CgCoinFull = {
   id: string; symbol: string; name: string; categories: string[]; description: { en: string };
   links: { homepage: string[]; blockchain_site: string[]; twitter_screen_name: string | null; subreddit_url: string | null; repos_url: { github: string[] } };
   genesis_date: string | null; asset_platform_id: string | null; platforms: Record<string, string>;
