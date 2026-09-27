@@ -268,8 +268,18 @@ async function progress(scanId: number, text: string) {
   await db.update(schema.scans).set({ progress: text }).where(eq(schema.scans.id, scanId));
 }
 
+// On hosted plans a function can be stopped after ~5 minutes. The scan keeps within a time budget,
+// and any scan still marked RUNNING after 6 minutes is treated as stopped so a new one can start.
+const BUDGET_MS = Number(process.env.SCAN_BUDGET_SECONDS ?? (process.env.VERCEL ? 230 : 3600)) * 1000;
+const STALE_MINUTES = process.env.VERCEL ? 6 : 20;
+export async function expireStaleScans() {
+  await db.update(schema.scans).set({ status: 'FAILED', finishedAt: new Date(), progress: 'Stopped by the hosting time limit before finishing. Run the scan again; results are cached so it will be faster.' })
+    .where(and(eq(schema.scans.status, 'RUNNING'), sql`${schema.scans.startedAt} < now() - make_interval(mins => ${STALE_MINUTES})`));
+}
+
 export async function startScan(trigger: 'MANUAL' | 'AUTO'): Promise<number> {
-  const running = await db.query.scans.findFirst({ where: and(eq(schema.scans.status, 'RUNNING'), sql`${schema.scans.startedAt} > now() - interval '20 minutes'`) });
+  await expireStaleScans();
+  const running = await db.query.scans.findFirst({ where: eq(schema.scans.status, 'RUNNING') });
   if (running) return running.id;
   const settings = await getSettings();
   const [s] = await db.insert(schema.scans).values({ scanDate: todayISO(), trigger, status: 'RUNNING', progress: 'Starting…', dataMode: DATA_MODE, settings }).returning();
@@ -279,6 +289,7 @@ export async function startScan(trigger: 'MANUAL' | 'AUTO'): Promise<number> {
 export async function runScan(scanId: number): Promise<void> {
   const errors: Errors = [];
   const settings = await getSettings();
+  const t0 = Date.now();
   try {
     // 1. Universe
     const markets: cg.CgMarket[] = [];
@@ -333,6 +344,10 @@ export async function runScan(scanId: number): Promise<void> {
     const results: { row: cg.CgMarket; a: Analysis }[] = [];
     let i = 0;
     for (const row of Array.from(deep.values())) {
+      if (Date.now() - t0 > BUDGET_MS) {
+        errors.push({ source: 'time limit', message: `Stopped after analysing ${i} of ${deep.size} coins to stay within the hosting time limit. The Daily 5 was chosen from the coins analysed. A free CoinGecko key makes scans faster.` });
+        break;
+      }
       i++;
       await progress(scanId, `Analysing ${row.name} (${i} of ${deep.size})…`);
       results.push({ row, a: await analyzeCoin(row, { regime: market.regime, alt7d: market.alt7d.value, btcPrices, ethPrices, llama, settings, errors, cmc }) });
