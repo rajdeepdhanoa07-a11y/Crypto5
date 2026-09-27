@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+body { @apply bg-term-bg text-txt antialiased; }
+.num { @apply font-mono tabular-nums; }
+
+@layer components {
+  .panel { @apply min-w-0 rounded-lg border border-term-line bg-term-panel; }
+  .panel-h { @apply flex items-center justify-between gap-3 border-b border-term-line px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-txt-soft; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-md px-3.5 py-2 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-amber { @apply btn bg-amber text-amber-ink hover:bg-[#ffb840]; }
+  .btn-ghost { @apply btn border border-term-line2 text-txt hover:bg-term-raised; }
+  .btn-sm { @apply px-2.5 py-1.5 text-xs; }
+  .input { @apply w-full rounded-md border border-term-line2 bg-term-bg px-3 py-2 text-sm text-txt placeholder:text-txt-mute focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30; }
+  .label { @apply mb-1 block text-[11px] font-semibold uppercase tracking-wider text-txt-mute; }
+  .tbl { @apply w-full text-left text-sm; }
+  .tbl th { @apply whitespace-nowrap border-b border-term-line px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-txt-mute; }
+  .tbl td { @apply whitespace-nowrap border-b border-term-line/60 px-3 py-2; }
+  .tbl tbody tr:hover { @apply bg-term-raised; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media print {
+  body { background: #fff; color: #111; }
+  .no-print { display: none !important; }
+  .panel { border-color: #ccc; background: #fff; }
+}
