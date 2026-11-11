@@ -1,0 +1,49 @@
+{
+  "sections": {
+    "nova_ab": {
+      "type": "nova-announcement-bar",
+      "blocks": {
+        "ab1": {
+          "type": "message",
+          "settings": {
+            "icon": "",
+            "text": "LIMITED-TIME OFFER | GET 10% OFF YOUR ORDER | USE CODE [CODE] AT CHECKOUT",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "ab1"
+      ],
+      "settings": {
+        "code": "WELCOME10",
+        "speed": 45,
+        "repeat": 3
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_position": "top-center",
+        "mobile_logo_position": "center",
+        "menu": "main-menu",
+        "menu_type_desktop": "mega",
+        "sticky_header_type": "always",
+        "show_line_separator": true,
+        "color_scheme": "scheme-2",
+        "menu_color_scheme": "scheme-3",
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "margin_bottom": 0,
+        "padding_top": 16,
+        "padding_bottom": 8
+      }
+    }
+  },
+  "order": [
+    "nova_ab",
+    "header"
+  ],
+  "name": "t:sections.header.name",
+  "type": "header"
+}

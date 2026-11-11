@@ -1,0 +1,48 @@
+{%- doc -%}
+  Slow scrolling trust strip. Pauses on hover and stops for visitors who prefer reduced motion.
+{%- enddoc -%}
+{%- capture items -%}
+  {%- for block in section.blocks -%}
+    <li class="nova-marquee__item{% if block.settings.region == 'in' %} nova-only-in{% elsif block.settings.region == 'intl' %} nova-only-intl{% endif %}" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</li>
+  {%- endfor -%}
+{%- endcapture -%}
+<div class="nova-marquee color-{{ section.settings.color_scheme }} gradient">
+  <div class="nova-marquee__track" style="--nova-marquee-speed: {{ section.settings.speed }}s;">
+    <ul class="nova-marquee__list" role="list">{% for i in (1..3) %}{{ items }}{% endfor %}</ul>
+    <ul class="nova-marquee__list" role="list" aria-hidden="true">{% for i in (1..3) %}{{ items }}{% endfor %}</ul>
+  </div>
+</div>
+<style>
+  .nova-marquee { overflow: hidden; border-top: 1px solid rgba(var(--color-foreground), .08); border-bottom: 1px solid rgba(var(--color-foreground), .08); }
+  .nova-marquee__track { display: flex; width: max-content; animation: nova-marquee var(--nova-marquee-speed, 45s) linear infinite; }
+  .nova-marquee:hover .nova-marquee__track { animation-play-state: paused; }
+  .nova-marquee__list { display: flex; flex-shrink: 0; list-style: none; margin: 0; padding: 0; }
+  .nova-marquee__item { display: flex; align-items: center; white-space: nowrap; padding: 1.5rem 0; font-family: var(--font-body-family); font-size: 1.15rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; }
+  .nova-marquee__item::after { content: ""; display: inline-block; width: .5rem; height: .5rem; margin: 0 3.2rem; border-radius: 50%; background: #c6a46a; }
+  .nova-marquee__item.nova-hidden, .nova-marquee__item[hidden] { display: none; }
+  @keyframes nova-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .nova-marquee__track { animation: none; } }
+</style>
+
+{% schema %}
+{
+  "name": "Nova scrolling strip",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "range", "id": "speed", "label": "Seconds per loop (higher is slower)", "min": 20, "max": 90, "step": 5, "default": 45 },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text" },
+        { "type": "select", "id": "region", "label": "Show to", "options": [ { "value": "all", "label": "Everyone" }, { "value": "in", "label": "Buyers in India only" }, { "value": "intl", "label": "International buyers only" } ], "default": "all" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "Nova scrolling strip" } ]
+}
+{% endschema %}

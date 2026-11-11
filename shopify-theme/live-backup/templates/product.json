@@ -1,0 +1,280 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "judge_me_reviews_preview_badge_qTMg4F": {
+          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "savings": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{%- assign v = product.selected_or_first_available_variant -%}\n{%- if v.compare_at_price > v.price -%}\n{%- assign save = v.compare_at_price | minus: v.price -%}\n{%- assign pct = save | times: 100 | divided_by: v.compare_at_price -%}\n<p class=\"nova-save\">You save {{ save | money_without_trailing_zeros }} ({{ pct }}% off) · Inclusive of all taxes</p>\n<style>.nova-save{margin:-.6rem 0 1.2rem;font-size:1.4rem;font-weight:600;color:#1f7a4d;letter-spacing:.02rem}</style>\n{%- endif -%}"
+          }
+        },
+        "inventory": {
+          "type": "inventory",
+          "settings": {
+            "text_style": "body",
+            "inventory_threshold": 5,
+            "show_inventory_quantity": false
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "square"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": false
+          }
+        },
+        "eta": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{%- if product.available -%}\n<div class=\"nova-buybox\">\n  <div class=\"nova-buybox__row nova-only-in\">\n    <span class=\"nova-buybox__icon\" aria-hidden=\"true\">{%- render 'icon-accordion', icon: 'truck' -%}</span>\n    <span><strong>Free delivery in India</strong><br><span class=\"nova-buybox__sub\">Get it by <span class=\"nova-eta__date\">3–7 days</span></span></span>\n  </div>\n  <div class=\"nova-buybox__row nova-only-intl\">\n    <span class=\"nova-buybox__icon\" aria-hidden=\"true\">{%- render 'icon-accordion', icon: 'plane' -%}</span>\n    <span><strong>Worldwide shipping available</strong><br><span class=\"nova-buybox__sub\">Shipping charges depend on your destination and are shown at checkout</span></span>\n  </div>\n  <div class=\"nova-buybox__row\">\n    <span class=\"nova-buybox__icon\" aria-hidden=\"true\">{%- render 'icon-accordion', icon: 'lock' -%}</span>\n    <span><strong>Pay securely online</strong><br><span class=\"nova-buybox__sub\">UPI, cards &amp; netbanking · Encrypted checkout<span class=\"nova-only-in\"> · Cash on Delivery also available</span></span></span>\n  </div>\n  <div class=\"nova-buybox__row\">\n    <span class=\"nova-buybox__icon\" aria-hidden=\"true\">{%- render 'icon-accordion', icon: 'return' -%}</span>\n    <span><strong>7-day easy replacement</strong><br><span class=\"nova-buybox__sub\">Damaged or wrong item? We replace it or refund you</span></span>\n  </div>\n</div>\n<style>\n.nova-buybox{border:1px solid rgba(var(--color-foreground),.12);border-radius:8px;margin:.2rem 0 1.4rem}\n.nova-buybox__row{display:flex;gap:1.2rem;align-items:flex-start;padding:1.1rem 1.4rem;font-size:1.45rem;line-height:1.4;color:rgb(var(--color-foreground))}\n.nova-buybox__row + .nova-buybox__row{border-top:1px solid rgba(var(--color-foreground),.08)}\n.nova-buybox__icon{width:2rem;flex-shrink:0;margin-top:.2rem}\n.nova-buybox__sub{font-size:1.3rem;opacity:.75}\n</style>\n<script>\n(function(){var el=document.querySelectorAll('.nova-eta__date');if(!el.length)return;function add(d,n){var x=new Date(d),c=0;while(c<n){x.setDate(x.getDate()+1);if(x.getDay()!==0)c++;}return x;}\nvar now=new Date(),o={weekday:'short',day:'numeric',month:'short'};var t=add(now,3).toLocaleDateString('en-IN',o)+' – '+add(now,7).toLocaleDateString('en-IN',o);\nel.forEach(function(e){e.textContent=t;});})();\n</script>\n{%- endif -%}"
+          }
+        },
+        "payments": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<p class=\"nova-secure\">Secure, encrypted checkout</p>\n<ul class=\"list list-payment\" role=\"list\" style=\"justify-content:flex-start;margin:.4rem 0 0;padding:0\">\n  {%- for type in shop.enabled_payment_types -%}<li class=\"list-payment__item\">{{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}</li>{%- endfor -%}\n</ul>\n{{ 'component-list-payment.css' | asset_url | stylesheet_tag }}"
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "tab_ship": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Shipping & Delivery",
+            "icon": "truck",
+            "content": "<p><strong>India:</strong> free delivery on prepaid orders, usually in 3–7 days.<br><strong>International:</strong> we ship worldwide, including the USA, UK, Canada and Australia. Charges depend on the destination and are shown at checkout.</p>",
+            "page": "shipping-policy"
+          }
+        },
+        "tab_cod": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Payment Options",
+            "icon": "lock",
+            "content": "<p><strong>Pay online:</strong> UPI (Google Pay, PhonePe, Paytm), debit or credit cards and netbanking on a secure, encrypted checkout. Your order is confirmed instantly.</p><p><strong>Cash on Delivery:</strong> available for orders within India.</p>",
+            "page": ""
+          }
+        },
+        "tab_returns": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "7-Day Replacement",
+            "icon": "return",
+            "content": "<p>Damaged, defective or incorrect item? Contact us within 7 days of delivery with photos and we will arrange a replacement or refund.</p>",
+            "page": "return-policy"
+          }
+        },
+        "tab_wholesale": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Wholesale & Custom Orders",
+            "icon": "box",
+            "content": "<p>Bulk, export and custom designs available for retailers, restaurants and businesses. Email <a href=\"mailto:novacresttrading@gmail.com\">novacresttrading@gmail.com</a> or see our <a href=\"/pages/wholesale-export\">Wholesale &amp; Export</a> page.</p>",
+            "page": ""
+          }
+        },
+        "complementary": {
+          "type": "complementary",
+          "settings": {
+            "block_heading": "Complete the set",
+            "make_collapsible_row": false,
+            "icon": "none",
+            "product_list_limit": 3,
+            "products_per_page": 2,
+            "pagination_style": "dots",
+            "image_ratio": "square",
+            "enable_quick_add": true
+          }
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        },
+        "sticky": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{%- if product.available -%}\n<div class=\"nova-sticky-atc\" hidden>\n  <div class=\"nova-sticky-atc__info\"><span class=\"nova-sticky-atc__title\">{{ product.title | escape }}</span><span class=\"nova-sticky-atc__price\">{{ product.selected_or_first_available_variant.price | money }}</span></div>\n  <button type=\"button\" class=\"button nova-sticky-atc__btn\">Add to cart</button>\n</div>\n<style>\n.nova-sticky-atc{position:fixed;left:0;right:0;bottom:0;z-index:3;display:flex;align-items:center;gap:1.2rem;padding:1rem 1.6rem calc(1rem + env(safe-area-inset-bottom));background:rgb(var(--color-background));box-shadow:0 -4px 16px rgba(0,0,0,.08);border-top:1px solid rgba(var(--color-foreground),.1)}\n.nova-sticky-atc[hidden]{display:none}\n.nova-sticky-atc__info{flex:1;min-width:0;display:flex;flex-direction:column;font-size:1.3rem;line-height:1.3;color:rgb(var(--color-foreground))}\n.nova-sticky-atc__title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}\n.nova-sticky-atc__price{font-weight:700}\n.nova-sticky-atc__btn{min-width:13rem;margin:0}\n@media screen and (max-width:749px){\n  body.nova-sticky-on{padding-bottom:7.2rem}\n  body.nova-sticky-on #ShopifyChat,body.nova-sticky-on #dummy-chat-button-iframe,body.nova-sticky-on inbox-online-store-chat{bottom:7.6rem!important}\n}\n@media screen and (min-width:750px){.nova-sticky-atc{display:none!important}}\n</style>\n<script>\n(function(){var bar=document.querySelector('.nova-sticky-atc');var main=document.querySelector('product-form button[name=\"add\"]');if(!bar||!main||!('IntersectionObserver' in window))return;\nnew IntersectionObserver(function(e){var show=!e[0].isIntersecting&&e[0].boundingClientRect.top<0&&!main.disabled;bar.hidden=!show;document.body.classList.toggle('nova-sticky-on',show);}).observe(main);\nbar.querySelector('button').addEventListener('click',function(){main.click();});})();\n</script>\n{%- endif -%}"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "judge_me_reviews_preview_badge_qTMg4F",
+        "price",
+        "savings",
+        "inventory",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "eta",
+        "payments",
+        "description",
+        "tab_ship",
+        "tab_cod",
+        "tab_returns",
+        "tab_wholesale",
+        "complementary",
+        "share",
+        "sticky"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "large",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "thumbnail",
+        "mobile_thumbnails": "show",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "1793190956a6fc4989": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_jPwmKi": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "real_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_jPwmKi"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You May Also Like",
+        "heading_size": "h1",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": true,
+        "padding_top": 56,
+        "padding_bottom": 56
+      }
+    },
+    "why": {
+      "type": "nova-features",
+      "blocks": {
+        "w0": {
+          "type": "feature",
+          "settings": {
+            "icon": "map_pin",
+            "title": "Made in India",
+            "region": "all",
+            "text": "<p>Manufactured in India with a focus on quality and practical design.</p>"
+          }
+        },
+        "w1": {
+          "type": "feature",
+          "settings": {
+            "icon": "lock",
+            "title": "Secure Checkout",
+            "region": "all",
+            "text": "<p>Encrypted payments with instant order confirmation.</p>"
+          }
+        },
+        "w2": {
+          "type": "feature",
+          "settings": {
+            "icon": "plane",
+            "title": "Worldwide Shipping",
+            "region": "all",
+            "text": "<p>We ship from India to customers around the world.</p>"
+          }
+        },
+        "w3": {
+          "type": "feature",
+          "settings": {
+            "icon": "chat_bubble",
+            "title": "Real Human Support",
+            "region": "all",
+            "text": "<p>Questions before you buy? WhatsApp or email us and we usually reply within a few hours.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "w0",
+        "w1",
+        "w2",
+        "w3"
+      ],
+      "settings": {
+        "heading": "The NovaCrest Promise",
+        "subheading": "",
+        "compact": false,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "alignment": "center",
+        "button_label": "",
+        "button_link": "",
+        "button_label_2": "",
+        "button_link_2": "",
+        "color_scheme": "scheme-2",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    }
+  },
+  "order": [
+    "main",
+    "1793190956a6fc4989",
+    "related-products",
+    "why"
+  ]
+}

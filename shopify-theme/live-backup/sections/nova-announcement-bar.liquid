@@ -1,0 +1,94 @@
+{%- comment -%} NovaCrest premium announcement bar — scrolling gold ticker on black. {%- endcomment -%}
+{%- if section.blocks.size > 0 -%}
+<div class="nova-ab-bar" role="region" aria-label="Announcements">
+  <div class="nova-ab-track" aria-hidden="true">
+    {%- assign repeat = 4 -%}
+    {%- for n in (1..repeat) -%}
+      {%- for block in section.blocks -%}
+        <span class="nova-ab-item" {{ block.shopify_attributes }}>
+          {%- if block.settings.icon != blank -%}<span class="nova-ab-icon">{{ block.settings.icon }}</span> {%- endif -%}
+          {{- block.settings.text | escape -}}
+        </span>
+        <span class="nova-ab-sep" aria-hidden="true">✦</span>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+{%- endif -%}
+
+<style>
+  .nova-ab-bar {
+    background: #111111;
+    overflow: hidden;
+    height: 3.8rem;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 200;
+    border-bottom: 1px solid rgba(198,164,106,0.18);
+  }
+  .nova-ab-track {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    will-change: transform;
+    animation: nova-ab-scroll 35s linear infinite;
+  }
+  .nova-ab-bar:hover .nova-ab-track {
+    animation-play-state: paused;
+  }
+  .nova-ab-item {
+    font-family: var(--font-body-family);
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #C6A46A;
+    padding: 0 1.6rem;
+    flex-shrink: 0;
+  }
+  .nova-ab-icon {
+    margin-right: .3rem;
+    font-style: normal;
+  }
+  .nova-ab-sep {
+    color: rgba(198,164,106,0.35);
+    font-size: .9rem;
+    flex-shrink: 0;
+  }
+  @keyframes nova-ab-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-25%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nova-ab-track { animation: none; overflow-x: auto; }
+  }
+  @media screen and (max-width: 749px) {
+    .nova-ab-bar  { height: 3.4rem; }
+    .nova-ab-item { font-size: 1rem; padding: 0 1.2rem; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Announcement ticker",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon / symbol", "default": "✦" },
+        { "type": "text", "id": "text", "label": "Message", "default": "Free shipping on orders above ₹999" }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Announcement ticker"
+    }
+  ],
+  "enabled_on": { "groups": ["header"] }
+}
+{% endschema %}

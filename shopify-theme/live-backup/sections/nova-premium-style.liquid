@@ -1,0 +1,197 @@
+{%- comment -%}
+  NOVA monochrome design system: Black #111111 and White #ffffff only, with soft greys for lines and muted text.
+  CSS only, loaded on every page from the footer group. Overrides the theme colour schemes and the custom Nova sections.
+{%- endcomment -%}
+<style>
+  :root { --nova-black: #111111; --nova-white: #ffffff; --nova-soft: #f4f4f4; --nova-muted: #6b6b6b; --nova-line: rgba(17,17,17,.10); }
+
+  /* Colour schemes: light schemes become pure white, accent schemes become black */
+  :root, .color-scheme-1, .color-scheme-2 {
+    --color-background: 255,255,255; --gradient-background: #ffffff; --color-background-contrast: 191,191,191;
+    --color-foreground: 17,17,17; --color-shadow: 17,17,17;
+    --color-button: 17,17,17; --color-button-text: 255,255,255;
+    --color-secondary-button: 255,255,255; --color-secondary-button-text: 17,17,17; --color-link: 17,17,17;
+    --color-badge-foreground: 17,17,17; --color-badge-background: 255,255,255; --color-badge-border: 17,17,17;
+    --payment-terms-background-color: #ffffff;
+  }
+  .color-scheme-5 {
+    --color-background: 244,244,244; --gradient-background: #f4f4f4; --color-background-contrast: 180,180,180;
+    --color-foreground: 17,17,17; --color-shadow: 17,17,17;
+    --color-button: 17,17,17; --color-button-text: 255,255,255;
+    --color-secondary-button: 244,244,244; --color-secondary-button-text: 17,17,17; --color-link: 17,17,17;
+    --color-badge-foreground: 17,17,17; --color-badge-background: 244,244,244; --color-badge-border: 17,17,17;
+    --payment-terms-background-color: #f4f4f4;
+  }
+  .color-scheme-3, .color-scheme-4 {
+    --color-background: 17,17,17; --gradient-background: #111111; --color-background-contrast: 145,145,145;
+    --color-foreground: 255,255,255; --color-shadow: 0,0,0;
+    --color-button: 255,255,255; --color-button-text: 17,17,17;
+    --color-secondary-button: 17,17,17; --color-secondary-button-text: 255,255,255; --color-link: 255,255,255;
+    --color-badge-foreground: 255,255,255; --color-badge-background: 17,17,17; --color-badge-border: 255,255,255;
+    --payment-terms-background-color: #111111;
+  }
+  body { background-color: #ffffff; }
+
+  /* Typography */
+  body { color: #333333; -webkit-font-smoothing: antialiased; }
+  :is(h1,h2,h3,h4,.h0,.h1,.h2,.h3,.h4) { color: var(--nova-black); font-weight: 400; letter-spacing: -.005em; }
+  :is(.color-scheme-3,.color-scheme-4) :is(h1,h2,h3,h4,.h0,.h1,.h2,.h3,.h4) { color: var(--nova-white); }
+  .rte, .rte p { line-height: 1.75; }
+  .caption-with-letter-spacing { letter-spacing: .22em; font-size: 1.15rem; font-weight: 500; color: var(--nova-muted); }
+  :is(.color-scheme-3,.color-scheme-4) .caption-with-letter-spacing { color: rgba(255,255,255,.7); }
+  .title-wrapper-with-link .title, .collection-list-title { margin-bottom: 0; }
+
+  /* Buttons: solid black / white text; on hover they invert (white / black text, thin black border) */
+  .button, .shopify-payment-button__button--unbranded { min-height: 5.2rem; padding: 0 3.2rem; font-family: var(--font-body-family); font-size: 1.3rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; transition: background-color .3s ease, color .3s ease; }
+  .button::before { box-shadow: none !important; }
+  .button::after, .button::before { transition: box-shadow .3s ease; }
+  .button:not(.button--secondary):not(.button--tertiary)::after { box-shadow: inset 0 0 0 1px rgb(var(--color-button)) !important; }
+  .button:not(.button--secondary):not(.button--tertiary):not([disabled]):hover { background-color: rgb(var(--color-background)); color: rgb(var(--color-foreground)); }
+  .button--secondary::after { box-shadow: inset 0 0 0 1px rgb(var(--color-foreground)) !important; }
+  .button--secondary:not([disabled]):hover { background-color: rgb(var(--color-foreground)); color: rgb(var(--color-background)); }
+  a.link:hover, .link--text:hover, .rte a:hover { color: inherit; opacity: .6; }
+  .rte a { text-decoration-color: currentColor; text-underline-offset: .3rem; }
+
+  /* Announcement bar */
+  .utility-bar { border-bottom: 1px solid rgba(255,255,255,.12); }
+  .announcement-bar { padding: .2rem 0; }
+  .announcement-bar__message { font-family: var(--font-body-family); font-size: 1.1rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; padding: 1rem 0; }
+  .announcement-bar__message .link { text-decoration: none; }
+  .announcement-bar__message .link:hover { opacity: .65; }
+  .nova-ab-bar { border-bottom: 1px solid rgba(255,255,255,.12) !important; }
+  .nova-ab-item { color: #ffffff !important; }
+  .nova-ab-sep { color: rgba(255,255,255,.35) !important; }
+
+  /* Header: black, white logo, clean menu */
+  .header-wrapper { border-bottom: 1px solid rgba(255,255,255,.12); }
+  .header__heading-logo { filter: brightness(0) invert(1); }
+  .header__menu-item { font-family: var(--font-body-family); font-size: 1.2rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; }
+  .header__menu-item:hover, .header__menu-item:hover span { opacity: .65; text-decoration: none; }
+  .header__active-menu-item { text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: .2rem; }
+  .header__icon:hover .svg-wrapper, .header__icon:hover svg { opacity: .65; }
+  .header__submenu { border: 1px solid var(--nova-line); }
+  .header__submenu .header__menu-item { letter-spacing: .12em; font-size: 1.15rem; }
+  .menu-drawer__menu-item { font-family: var(--font-body-family); letter-spacing: .14em; text-transform: uppercase; font-size: 1.4rem; }
+  .menu-drawer__menu-item:hover { opacity: .65; }
+  .cart-count-bubble { background-color: #ffffff !important; color: #111111 !important; }
+
+  /* Hero */
+  .nova-hero { background: #ffffff !important; }
+  .nova-hero__eyebrow { color: var(--nova-black) !important; border-bottom-color: rgba(17,17,17,.35) !important; }
+  .nova-hero__sub { color: #555555 !important; }
+  .nova-hero__btn-primary { box-shadow: inset 0 0 0 1px #111111; }
+  .nova-hero__btn-primary:hover { background: #ffffff !important; color: #111111 !important; }
+  .nova-hero__btn-ghost:hover { color: #111111 !important; border-color: #111111 !important; opacity: .6; }
+  .nova-hero__placeholder { background: #f4f4f4 !important; }
+  .nova-hero__img-accent { border-color: #ffffff !important; }
+
+  /* Marquee */
+  .nova-marquee__item::after { background: currentColor !important; opacity: .45; }
+
+  /* Product and collection cards */
+  .card-wrapper .card__inner { background-color: #ffffff; }
+  .card__heading { font-family: var(--font-body-family); font-size: 1.5rem; font-weight: 500; letter-spacing: .02em; line-height: 1.45; color: var(--nova-black); }
+  .card__heading a:hover { color: var(--nova-black); text-decoration: underline; text-decoration-color: var(--nova-black); text-underline-offset: .4rem; }
+  .card-information { padding-top: .6rem; }
+  .card-information .price { font-size: 1.5rem; letter-spacing: .03em; color: var(--nova-black); }
+  .price--on-sale .price-item--regular { color: #8a8a8a; }
+  .price--on-sale .price-item--last { color: var(--nova-black); }
+  .badge { letter-spacing: .14em; text-transform: uppercase; font-size: 1rem; font-weight: 600; padding: .5rem 1rem; background-color: #111111 !important; color: #ffffff !important; border-color: #111111 !important; }
+  .card__media img { transition: transform .6s ease; }
+  @media (hover: hover) { .card-wrapper:hover .card__media img { transform: scale(1.03); } }
+  .collection-card-wrapper .card__heading, .collection-list .card__heading { font-family: var(--font-heading-family); font-size: 2rem; font-weight: 400; letter-spacing: 0; }
+
+  /* Card "Add to cart": solid black, white text; inverts to white on hover */
+  .quick-add__submit.button { min-height: 4.6rem; background-color: #111111 !important; color: #ffffff !important; font-size: 1.2rem; letter-spacing: .2em; }
+  .quick-add__submit.button::after { box-shadow: inset 0 0 0 1px #111111 !important; }
+  .quick-add__submit.button:not([disabled]):hover { background-color: #ffffff !important; color: #111111 !important; }
+  .quick-add__submit.button[disabled], .quick-add__submit.button[aria-disabled="true"] { background-color: #ffffff !important; color: #8a8a8a !important; opacity: 1; }
+  .quick-add__submit.button[disabled]::after { box-shadow: inset 0 0 0 1px rgba(17,17,17,.2) !important; }
+  .quick-add__submit .spinner .path { stroke: currentColor; }
+
+  /* Reviews (Judge.me): black stars */
+  .jdgm-star, .jdgm-star:before, .jdgm-carousel .jdgm-star, .jdgm-prev-badge__stars, .rating-star { color: #111111 !important; }
+  .rating-star { --color-rating-star: 17,17,17; }
+
+  /* Section headings */
+  .title-wrapper-with-link { align-items: flex-end; }
+  .title-wrapper-with-link .link { font-family: var(--font-body-family); font-size: 1.2rem; letter-spacing: .16em; text-transform: uppercase; }
+
+  /* Feature / trust icons */
+  .nova-features__icon { color: var(--nova-black); border-color: rgba(17,17,17,.25) !important; background: transparent !important; }
+  :is(.color-scheme-3,.color-scheme-4) .nova-features__icon { color: var(--nova-white); border-color: rgba(255,255,255,.3) !important; }
+  .nova-features__title { font-family: var(--font-heading-family); font-weight: 400; }
+  .nova-features--compact .nova-features__title { font-family: var(--font-body-family); font-size: 1.25rem !important; font-weight: 500 !important; letter-spacing: .12em; text-transform: uppercase; }
+
+  /* Comparison table */
+  .nova-compare__row--head .nova-compare__brand { color: #ffffff !important; }
+
+  /* Product page */
+  .product__title h1 { font-size: clamp(2.6rem, 3.2vw, 3.6rem); line-height: 1.2; }
+  .product .price .price-item { font-size: 2.2rem; letter-spacing: .02em; color: var(--nova-black); }
+  .product .price--on-sale .price-item--regular { font-size: 1.6rem; color: #8a8a8a; }
+  .product-form__submit { background-color: var(--nova-black) !important; color: #ffffff !important; }
+  .product-form__submit::after { box-shadow: inset 0 0 0 1px #111111 !important; }
+  .product-form__submit:not([disabled]):hover { background-color: #ffffff !important; color: var(--nova-black) !important; }
+  .shopify-payment-button__button--unbranded { background-color: transparent !important; color: var(--nova-black) !important; box-shadow: inset 0 0 0 1px var(--nova-black) !important; }
+  .shopify-payment-button__button--unbranded:hover:not([disabled]) { background-color: var(--nova-black) !important; color: #ffffff !important; }
+  .product-form__buttons { max-width: 48rem; }
+  .product-form__quantity .quantity { min-height: 5.2rem; }
+  .nova-save { color: #333333 !important; font-weight: 500 !important; }
+  .nova-buybox { border-radius: 0 !important; background: #ffffff; border-color: var(--nova-line) !important; max-width: 48rem; margin-top: 1.6rem !important; }
+  .nova-buybox__icon { color: var(--nova-black); }
+  .nova-secure { margin: 1.6rem 0 .4rem; font-size: 1.1rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: #333333; }
+  .product__accordion summary .accordion__title { font-family: var(--font-body-family); font-size: 1.3rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
+  .product__accordion { border-color: var(--nova-line); }
+  .product__description { line-height: 1.75; }
+  .product-media-container { background: #ffffff; }
+  .thumbnail { border-radius: 0; }
+  .thumbnail[aria-current] { box-shadow: 0 0 0 1px var(--nova-black); }
+  .nova-sticky-atc__btn { background-color: var(--nova-black) !important; color: #ffffff !important; }
+  .product__info-container .nova-rzp-btn:hover { background: #ffffff !important; color: #111111 !important; box-shadow: inset 0 0 0 1px #111111 !important; }
+  .nova-welcome { border-color: #111111 !important; }
+  .nova-welcome__chip { background: #f4f4f4 !important; }
+  .nova-welcome__copy:hover { background: #ffffff !important; border-color: #111111 !important; color: #111111 !important; }
+  .nova-welcome__copy.is-copied { background: #111111 !important; border-color: #111111 !important; color: #ffffff !important; }
+  .nova-stock__dot { background: #111111 !important; box-shadow: 0 0 0 .6rem rgba(17,17,17,.08) !important; }
+  .nova-stock__bar span { background: #111111 !important; }
+
+  /* Collection page */
+  .collection-hero__title { font-size: clamp(3rem, 4vw, 4.6rem); }
+  .collection-hero__description { max-width: 64rem; color: #333333; }
+  .facets__summary, .facet-filters__label { letter-spacing: .12em; text-transform: uppercase; font-size: 1.2rem; }
+
+  /* Forms */
+  .field__input, .select__select, .customer .field input { background-color: #ffffff; }
+
+  /* Footer: black with white text */
+  .footer { border-top: 1px solid rgba(255,255,255,.12); }
+  .footer-block__heading { font-family: var(--font-body-family); font-size: 1.2rem !important; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #ffffff; margin-bottom: 1.8rem; }
+  .footer-block__details-content .list-menu__item--link { padding: .5rem 0; color: rgba(255,255,255,.7); transition: color .2s; }
+  .footer-block__details-content .list-menu__item--link:hover { color: #ffffff; text-decoration: none; }
+  .footer .rte, .footer-block__details-content.rte { color: rgba(255,255,255,.7); line-height: 1.85; }
+  .footer .rte a { color: rgba(255,255,255,.9); text-decoration-color: rgba(255,255,255,.4); }
+  .footer .rte a:hover { color: #ffffff; opacity: 1; }
+  .footer .list-social__link { color: rgba(255,255,255,.8); transition: color .2s; }
+  .footer .list-social__link:hover { color: #ffffff; }
+  .footer__content-bottom { border-top: 1px solid rgba(255,255,255,.1); }
+  .footer .copyright__content { color: rgba(255,255,255,.5); letter-spacing: .06em; }
+
+  /* Mobile */
+  @media screen and (max-width: 749px) {
+    .announcement-bar__message { font-size: 1rem; letter-spacing: .12em; padding: .9rem 0; }
+    .button, .shopify-payment-button__button--unbranded { min-height: 5rem; padding: 0 2rem; }
+    .quick-add__submit.button { min-height: 4.2rem; padding: 0 1rem; font-size: 1.05rem; letter-spacing: .14em; }
+    .product-form__buttons, .nova-buybox { max-width: none; }
+    .card__heading { font-size: 1.4rem; }
+    .collection-card-wrapper .card__heading, .collection-list .card__heading { font-size: 1.7rem; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Nova premium style",
+  "settings": [],
+  "enabled_on": { "groups": ["footer"] }
+}
+{% endschema %}

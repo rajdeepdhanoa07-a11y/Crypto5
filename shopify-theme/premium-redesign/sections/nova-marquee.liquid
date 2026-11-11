@@ -1,0 +1,53 @@
+{%- doc -%}
+  Slow scrolling strip (homepage, below the hero). White background, black text, thin borders.
+  Runs independently of the top announcement bar, with its own speed. Type [CODE] to insert the discount code.
+  Pauses on hover and stops for visitors who prefer reduced motion.
+{%- enddoc -%}
+{%- assign code = section.settings.code | strip | upcase -%}
+{%- capture items -%}
+  {%- for block in section.blocks -%}
+    <li class="nova-marquee__item{% if block.settings.region == 'in' %} nova-only-in{% elsif block.settings.region == 'intl' %} nova-only-intl{% endif %}" {{ block.shopify_attributes }}>{{ block.settings.text | escape | replace: '[CODE]', code }}</li>
+  {%- endfor -%}
+{%- endcapture -%}
+<div class="nova-marquee color-{{ section.settings.color_scheme }} gradient">
+  <div class="nova-marquee__track" style="--nova-marquee-speed: {{ section.settings.speed }}s;">
+    <ul class="nova-marquee__list" role="list">{% for i in (1..3) %}{{ items }}{% endfor %}</ul>
+    <ul class="nova-marquee__list" role="list" aria-hidden="true">{% for i in (1..3) %}{{ items }}{% endfor %}</ul>
+  </div>
+</div>
+<style>
+  .nova-marquee { overflow: hidden; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8; contain: layout paint; }
+  .nova-marquee__track { display: flex; width: max-content; will-change: transform; animation: nova-marquee var(--nova-marquee-speed, 60s) linear infinite; }
+  .nova-marquee:hover .nova-marquee__track { animation-play-state: paused; }
+  .nova-marquee__list { display: flex; flex-shrink: 0; list-style: none; margin: 0; padding: 0; }
+  .nova-marquee__item { display: flex; align-items: center; white-space: nowrap; padding: 1.8rem 0; font-family: var(--font-body-family); font-size: 1.2rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: #111111; }
+  .nova-marquee__item::after { content: ""; display: inline-block; width: 1.6rem; height: 1px; margin: 0 3.2rem; background: #111111; opacity: .5; }
+  .nova-marquee__item.nova-hidden, .nova-marquee__item[hidden] { display: none; }
+  @keyframes nova-marquee { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
+  @media (prefers-reduced-motion: reduce) { .nova-marquee__track { animation: none; } }
+  @media screen and (max-width: 749px) { .nova-marquee__item { padding: 1.4rem 0; font-size: 1.05rem; } .nova-marquee__item::after { margin: 0 2rem; } }
+</style>
+
+{% schema %}
+{
+  "name": "Nova scrolling strip",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "code", "label": "Discount code", "info": "Type [CODE] in an item to show this code.", "default": "WELCOME10" },
+    { "type": "range", "id": "speed", "label": "Seconds per loop (higher is slower)", "min": 20, "max": 120, "step": 5, "default": 60 },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text" },
+        { "type": "select", "id": "region", "label": "Show to", "options": [ { "value": "all", "label": "Everyone" }, { "value": "in", "label": "Buyers in India only" }, { "value": "intl", "label": "International buyers only" } ], "default": "all" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "Nova scrolling strip" } ]
+}
+{% endschema %}

@@ -1,0 +1,81 @@
+{%- doc -%}
+  Welcome discount code box on product pages, placed directly above the Add to cart button.
+  Copy button copies the code; it also applies the code to the visitor's checkout via /discount/CODE.
+{%- enddoc -%}
+{%- if template.name == 'product' and product and section.settings.code != blank -%}
+  {%- assign code = section.settings.code | strip | upcase -%}
+  <div class="nova-welcome" id="NovaWelcome" hidden>
+    <div class="nova-welcome__text">
+      <p class="nova-welcome__title">{{ section.settings.title | escape }}</p>
+      <p class="nova-welcome__sub">{{ section.settings.subtitle | escape }}</p>
+    </div>
+    <div class="nova-welcome__code">
+      <span class="nova-welcome__chip">{{ code }}</span>
+      <button type="button" class="nova-welcome__copy" data-code="{{ code }}" aria-label="Copy code {{ code }}">Copy</button>
+    </div>
+  </div>
+  <style>
+    .nova-welcome { box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: 1.2rem; flex-wrap: wrap; width: 100%; max-width: 48rem; margin: 0 0 1.4rem; padding: 1.2rem 1.4rem; background: #ffffff; border: 1px dashed #c6a46a; }
+    .nova-welcome[hidden] { display: none; }
+    .nova-welcome__title { margin: 0; font-family: var(--font-body-family); font-size: 1.45rem; font-weight: 600; color: #111111; letter-spacing: .02em; }
+    .nova-welcome__sub { margin: .2rem 0 0; font-size: 1.25rem; color: #333333; opacity: .8; }
+    .nova-welcome__code { display: flex; align-items: stretch; flex-shrink: 0; }
+    .nova-welcome__chip { display: flex; align-items: center; padding: 0 1.2rem; min-height: 3.8rem; background: #f8f6f1; border: 1px solid rgba(17,17,17,.15); border-right: 0; font-family: var(--font-body-family); font-size: 1.35rem; font-weight: 600; letter-spacing: .14em; color: #111111; }
+    .nova-welcome__copy { min-height: 3.8rem; padding: 0 1.6rem; border: 1px solid #111111; background: #111111; color: #ffffff; font-family: var(--font-body-family); font-size: 1.15rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; transition: background-color .2s, color .2s; }
+    .nova-welcome__copy:hover { background: #c6a46a; border-color: #c6a46a; color: #111111; }
+    .nova-welcome__copy.is-copied { background: #1f7a4d; border-color: #1f7a4d; color: #ffffff; }
+    @media screen and (max-width: 749px) { .nova-welcome { max-width: none; } }
+  </style>
+  <script>
+    (function () {
+      var box = document.getElementById('NovaWelcome');
+      var info = document.querySelector('.product__info-container');
+      if (!box || !info) return;
+      function blockOf(el) {
+        var n = el;
+        while (n && n.parentElement && n.parentElement !== info) n = n.parentElement;
+        return n && n.parentElement === info ? n : null;
+      }
+      var atc = info.querySelector('product-form button[name="add"]');
+      var target = atc ? blockOf(atc) : null;
+      if (target) info.insertBefore(box, target);
+      box.hidden = false;
+
+      var btn = box.querySelector('.nova-welcome__copy');
+      var code = btn.getAttribute('data-code');
+      function done() {
+        btn.textContent = 'Copied!';
+        btn.classList.add('is-copied');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('is-copied'); }, 2500);
+      }
+      function fallback() {
+        var t = document.createElement('textarea');
+        t.value = code; t.setAttribute('readonly', ''); t.style.position = 'absolute'; t.style.left = '-9999px';
+        document.body.appendChild(t); t.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(t); done();
+      }
+      btn.addEventListener('click', function () {
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(code).then(done, fallback);
+        } else { fallback(); }
+        {%- if section.settings.auto_apply -%}
+        try { fetch('/discount/' + encodeURIComponent(code), { credentials: 'same-origin' }); } catch (e) {}
+        {%- endif -%}
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Nova welcome code",
+  "settings": [
+    { "type": "text", "id": "code", "label": "Discount code (must exist in Discounts)", "default": "WELCOME10" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Welcome offer: 10% off" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Copy the code and use it at checkout" },
+    { "type": "checkbox", "id": "auto_apply", "label": "Also apply the code automatically when Copy is tapped", "default": true }
+  ],
+  "enabled_on": { "groups": ["footer"] }
+}
+{% endschema %}

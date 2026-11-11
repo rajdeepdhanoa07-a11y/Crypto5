@@ -1,0 +1,148 @@
+{%- doc -%}
+  "A little something extra" offer section: black background, discount code, Copy code button and an optional countdown.
+  The countdown only appears when a real expiry date is set. It counts down to that fixed moment (India time unless
+  another UTC offset is chosen), never resets, and when the offer has expired the whole section hides itself.
+{%- enddoc -%}
+{%- liquid
+  assign code = section.settings.code | strip | upcase
+  assign ends = section.settings.end_date | strip
+  assign has_timer = false
+  if ends != blank
+    assign end_time = section.settings.end_time | strip | default: '23:59'
+    assign end_iso = ends | append: 'T' | append: end_time | append: ':00' | append: section.settings.utc_offset
+    assign end_epoch = end_iso | date: '%s' | plus: 0
+    assign now_epoch = 'now' | date: '%s' | plus: 0
+    assign has_timer = true
+  endif
+-%}
+{%- if code != blank -%}
+<section class="nova-offer color-scheme-3 gradient" id="NovaOffer-{{ section.id }}" {% if has_timer %}data-end="{{ end_iso }}"{% endif %} style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;" {% if has_timer and end_epoch <= now_epoch %}hidden{% endif %}>
+  <div class="page-width nova-offer__inner">
+    {%- if section.settings.caption != blank -%}<p class="nova-offer__caption">{{ section.settings.caption | escape }}</p>{%- endif -%}
+    <h2 class="nova-offer__heading h1">{{ section.settings.heading | escape }}</h2>
+    {%- if section.settings.subheading != blank -%}<p class="nova-offer__sub">{{ section.settings.subheading | escape }}</p>{%- endif -%}
+
+    <div class="nova-offer__code">
+      <span class="nova-offer__chip" aria-label="Discount code">{{ code }}</span>
+      <button type="button" class="nova-offer__copy" data-code="{{ code }}" data-label="{{ section.settings.copy_label | escape }}">{{ section.settings.copy_label | escape }}</button>
+    </div>
+    {%- if section.settings.code_note != blank -%}<p class="nova-offer__note">{{ section.settings.code_note | escape | replace: '[CODE]', code }}</p>{%- endif -%}
+    <p class="nova-offer__status visually-hidden" role="status" aria-live="polite"></p>
+
+    {%- if has_timer -%}
+      <div class="nova-offer__timer" aria-label="Time left on this offer">
+        <div><span data-unit="d">--</span><small>Days</small></div>
+        <div><span data-unit="h">--</span><small>Hours</small></div>
+        <div><span data-unit="m">--</span><small>Minutes</small></div>
+        <div><span data-unit="s">--</span><small>Seconds</small></div>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <a class="button nova-offer__btn" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">{{ section.settings.button_label | escape }}</a>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .nova-offer { background: #111111; color: #ffffff; text-align: center; padding: calc(var(--pt) * .75) 0 calc(var(--pb) * .75); }
+  .nova-offer[hidden] { display: none; }
+  @media screen and (min-width: 750px) { .nova-offer { padding: var(--pt) 0 var(--pb); } }
+  .nova-offer__inner { display: flex; flex-direction: column; align-items: center; gap: 1.6rem; max-width: 72rem; }
+  .nova-offer__caption { margin: 0; font-size: 1.1rem; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+  .nova-offer__heading { margin: 0; color: #ffffff; letter-spacing: .06em; text-transform: uppercase; }
+  .nova-offer__sub { margin: 0; font-size: 1.6rem; line-height: 1.6; color: rgba(255,255,255,.8); max-width: 48rem; }
+  .nova-offer__code { display: flex; align-items: stretch; margin-top: 1.2rem; max-width: 100%; }
+  .nova-offer__chip { display: flex; align-items: center; padding: 0 2.4rem; min-height: 5.2rem; border: 1px dashed rgba(255,255,255,.6); border-right: 0; font-size: 1.6rem; font-weight: 600; letter-spacing: .24em; color: #ffffff; }
+  .nova-offer__copy { min-height: 5.2rem; padding: 0 2.4rem; border: 1px solid #ffffff; background: #ffffff; color: #111111; font-family: var(--font-body-family); font-size: 1.2rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; cursor: pointer; transition: background-color .25s, color .25s; }
+  .nova-offer__copy:hover, .nova-offer__copy.is-copied { background: #111111; color: #ffffff; }
+  .nova-offer__note { margin: 0; font-size: 1.25rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.65); }
+  .nova-offer__timer { display: grid; grid-template-columns: repeat(4, minmax(6.4rem, 1fr)); gap: 1.2rem; margin-top: 1.2rem; }
+  .nova-offer__timer div { display: flex; flex-direction: column; align-items: center; padding: 1.2rem .8rem; border: 1px solid rgba(255,255,255,.2); }
+  .nova-offer__timer span { font-family: var(--font-heading-family); font-size: 2.8rem; line-height: 1; font-variant-numeric: tabular-nums; }
+  .nova-offer__timer small { margin-top: .6rem; font-size: 1rem; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+  .nova-offer__btn { margin-top: 1.2rem; }
+  @media screen and (max-width: 749px) {
+    .nova-offer__chip { padding: 0 1.4rem; font-size: 1.4rem; letter-spacing: .16em; }
+    .nova-offer__copy { padding: 0 1.6rem; }
+    .nova-offer__timer { gap: .8rem; grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; max-width: 36rem; }
+    .nova-offer__timer span { font-size: 2.2rem; }
+  }
+</style>
+<script>
+  (function () {
+    var root = document.getElementById('NovaOffer-{{ section.id }}');
+    if (!root) return;
+    var btn = root.querySelector('.nova-offer__copy');
+    var status = root.querySelector('.nova-offer__status');
+    var code = btn.getAttribute('data-code');
+    var label = btn.getAttribute('data-label');
+    function done() {
+      btn.textContent = 'Copied';
+      btn.classList.add('is-copied');
+      if (status) status.textContent = 'Code ' + code + ' copied';
+      setTimeout(function () { btn.textContent = label; btn.classList.remove('is-copied'); }, 2500);
+    }
+    function fallback() {
+      var t = document.createElement('textarea');
+      t.value = code; t.setAttribute('readonly', ''); t.style.position = 'absolute'; t.style.left = '-9999px';
+      document.body.appendChild(t); t.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(t); done();
+    }
+    btn.addEventListener('click', function () {
+      if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(code).then(done, fallback); } else { fallback(); }
+      {%- if section.settings.auto_apply -%}
+      try { fetch('/discount/' + encodeURIComponent(code), { credentials: 'same-origin' }); } catch (e) {}
+      {%- endif -%}
+    });
+
+    var endAttr = root.getAttribute('data-end');
+    if (!endAttr) return;
+    var end = new Date(endAttr).getTime();
+    if (isNaN(end)) return;
+    var els = {};
+    root.querySelectorAll('[data-unit]').forEach(function (el) { els[el.getAttribute('data-unit')] = el; });
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+    var timer;
+    function tick() {
+      var left = end - Date.now();
+      if (left <= 0) { clearInterval(timer); root.hidden = true; return; }
+      var s = Math.floor(left / 1000);
+      els.d.textContent = pad(Math.floor(s / 86400));
+      els.h.textContent = pad(Math.floor((s % 86400) / 3600));
+      els.m.textContent = pad(Math.floor((s % 3600) / 60));
+      els.s.textContent = pad(s % 60);
+    }
+    tick();
+    timer = setInterval(tick, 1000);
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Nova offer + code",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "caption", "label": "Small caption", "default": "Limited-time offer" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "A little something extra" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Enjoy 10% OFF your order. Upgrade your everyday essentials for less." },
+    { "type": "text", "id": "code", "label": "Discount code", "info": "Must exist and be active in Shopify Discounts.", "default": "WELCOME10" },
+    { "type": "text", "id": "code_note", "label": "Line under the code", "info": "[CODE] is replaced with the code.", "default": "[CODE] – Get 10% off" },
+    { "type": "text", "id": "copy_label", "label": "Copy button label", "default": "Copy code" },
+    { "type": "checkbox", "id": "auto_apply", "label": "Also apply the code to the visitor's checkout when Copy is tapped", "default": true },
+    { "type": "header", "content": "Countdown (optional)" },
+    { "type": "paragraph", "content": "Only fill this in if the discount really ends on this date. Leave it empty and no timer is shown. After this moment the whole section hides itself; the timer never restarts." },
+    { "type": "text", "id": "end_date", "label": "Offer end date (YYYY-MM-DD)", "placeholder": "2026-12-31" },
+    { "type": "text", "id": "end_time", "label": "Offer end time (24h, HH:MM)", "default": "23:59" },
+    { "type": "select", "id": "utc_offset", "label": "Time zone of the end time", "options": [ { "value": "+05:30", "label": "India (IST)" }, { "value": "Z", "label": "UTC" } ], "default": "+05:30" },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop collection" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 88 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 88 }
+  ],
+  "presets": [ { "name": "Nova offer + code" } ]
+}
+{% endschema %}

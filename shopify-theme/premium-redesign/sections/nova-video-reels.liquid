@@ -1,0 +1,216 @@
+{%- doc -%}
+  "See Quality in Every Detail" product video reels. Each block is one real product video:
+  either a video uploaded in the theme editor, or the first video from a chosen product's media.
+  Vertical 9:16 cards, poster thumbnails, tap to play/pause, never autoplays with sound.
+  Optional muted preview while the card is on screen. Videos load only when needed (preload="none").
+  The section hides itself when no block has a video.
+{%- enddoc -%}
+{%- liquid
+  assign count = 0
+  for block in section.blocks
+    assign v = block.settings.video
+    if v == blank and block.settings.product != blank
+      assign v = block.settings.product.media | where: 'media_type', 'video' | first
+    endif
+    if v != blank
+      assign count = count | plus: 1
+    endif
+  endfor
+-%}
+{%- if count > 0 -%}
+<section class="nova-reels color-{{ section.settings.color_scheme }} gradient" id="NovaReels-{{ section.id }}" style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    <div class="nova-reels__head">
+      {%- if section.settings.caption != blank -%}<p class="nova-reels__caption">{{ section.settings.caption | escape }}</p>{%- endif -%}
+      <h2 class="h1 nova-reels__heading">{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.subheading != blank -%}<p class="nova-reels__sub">{{ section.settings.subheading | escape }}</p>{%- endif -%}
+    </div>
+    <ul class="nova-reels__list" role="list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign v = block.settings.video
+          assign p = block.settings.product
+          if v == blank and p != blank
+            assign v = p.media | where: 'media_type', 'video' | first
+          endif
+          if v == blank
+            continue
+          endif
+          assign mp4 = v.sources | where: 'mime_type', 'video/mp4' | sort: 'height' | reverse
+          assign src = blank
+          for s in mp4
+            if s.height <= 1080
+              assign src = s
+              break
+            endif
+          endfor
+          if src == blank
+            assign src = mp4 | last
+          endif
+          assign title = block.settings.title | default: p.title
+        -%}
+        <li class="nova-reels__item" {{ block.shopify_attributes }}>
+          <div class="nova-reel" data-autoplay="{{ section.settings.muted_preview }}">
+            <video
+              class="nova-reel__video"
+              playsinline muted loop preload="none"
+              {% if v.preview_image %}poster="{{ v.preview_image | image_url: width: 600 }}"{% endif %}
+              aria-label="{{ title | default: 'Product video' | escape }}">
+              {%- if src -%}<source data-src="{{ src.url }}" type="video/mp4">{%- endif -%}
+            </video>
+            <button type="button" class="nova-reel__toggle" aria-label="Play video{% if title != blank %}: {{ title | escape }}{% endif %}" aria-pressed="false">
+              <span class="nova-reel__icon nova-reel__icon--play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span>
+              <span class="nova-reel__icon nova-reel__icon--pause" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg></span>
+            </button>
+            <button type="button" class="nova-reel__sound" aria-label="Turn sound on" aria-pressed="false">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path class="nova-reel__mute-x" d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="1.6" fill="none"/><path class="nova-reel__wave" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+            </button>
+          </div>
+          {%- if title != blank or p != blank -%}
+            <div class="nova-reels__meta">
+              {%- if title != blank -%}<p class="nova-reels__title">{{ title | escape }}</p>{%- endif -%}
+              {%- if p != blank -%}
+                <a class="nova-reels__link" href="{{ p.url }}">{{ section.settings.link_label | escape }} <span aria-hidden="true">→</span></a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .nova-reels { padding: calc(var(--pt) * .75) 0 calc(var(--pb) * .75); }
+  @media screen and (min-width: 750px) { .nova-reels { padding: var(--pt) 0 var(--pb); } }
+  .nova-reels__head { text-align: center; max-width: 64rem; margin: 0 auto 4rem; }
+  .nova-reels__caption { margin: 0 0 1.2rem; font-size: 1.1rem; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: #777777; }
+  .nova-reels__heading { margin: 0; }
+  .nova-reels__sub { margin: 1.4rem 0 0; font-size: 1.6rem; line-height: 1.6; color: #777777; }
+  .nova-reels__list { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(22rem, 1fr); gap: 2rem; margin: 0; padding: 0 0 .4rem; list-style: none; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; justify-content: center; }
+  .nova-reels__list::-webkit-scrollbar { display: none; }
+  .nova-reels__item { scroll-snap-align: start; max-width: 32rem; }
+  .nova-reel { position: relative; aspect-ratio: 9 / 16; overflow: hidden; background: #f7f7f7; border: 1px solid #e8e8e8; }
+  .nova-reel__video { display: block; width: 100%; height: 100%; object-fit: cover; background: #f7f7f7; }
+  .nova-reel__toggle { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border: 0; padding: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,.25) 100%); cursor: pointer; color: #111111; }
+  .nova-reel__icon { display: flex; align-items: center; justify-content: center; width: 6rem; height: 6rem; border-radius: 50%; background: rgba(255,255,255,.92); transition: transform .25s ease, opacity .25s ease; }
+  .nova-reel__toggle:hover .nova-reel__icon { transform: scale(1.06); }
+  .nova-reel__icon--pause { display: none; }
+  .nova-reel.is-playing .nova-reel__toggle { background: none; }
+  .nova-reel.is-playing .nova-reel__icon--play { display: none; }
+  .nova-reel.is-playing .nova-reel__icon--pause { display: flex; opacity: 0; }
+  .nova-reel.is-playing .nova-reel__toggle:hover .nova-reel__icon--pause, .nova-reel.is-playing .nova-reel__toggle:focus-visible .nova-reel__icon--pause { opacity: 1; }
+  .nova-reel.is-previewing .nova-reel__icon--play { width: 4.4rem; height: 4.4rem; opacity: .9; }
+  .nova-reel__sound { position: absolute; right: 1.2rem; bottom: 1.2rem; z-index: 1; display: none; align-items: center; justify-content: center; width: 3.6rem; height: 3.6rem; border-radius: 50%; border: 0; background: rgba(17,17,17,.7); color: #ffffff; cursor: pointer; }
+  .nova-reel.is-playing .nova-reel__sound { display: flex; }
+  .nova-reel__sound .nova-reel__wave { display: none; }
+  .nova-reel__sound[aria-pressed="true"] .nova-reel__wave { display: inline; }
+  .nova-reel__sound[aria-pressed="true"] .nova-reel__mute-x { display: none; }
+  .nova-reels__meta { padding-top: 1.4rem; }
+  .nova-reels__title { margin: 0; font-size: 1.5rem; line-height: 1.4; color: #111111; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .nova-reels__link { display: inline-block; margin-top: .6rem; font-size: 1.15rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: #111111; text-decoration: none; border-bottom: 1px solid #111111; padding-bottom: .2rem; }
+  .nova-reels__link:hover { opacity: .6; }
+  @media screen and (max-width: 749px) {
+    .nova-reels__head { margin-bottom: 2.8rem; }
+    .nova-reels__list { grid-auto-columns: 68%; gap: 1.2rem; justify-content: start; margin: 0 -1.5rem; padding: 0 1.5rem .4rem; scroll-padding: 0 1.5rem; }
+  }
+</style>
+<script>
+  (function () {
+    var root = document.getElementById('NovaReels-{{ section.id }}');
+    if (!root) return;
+    var reels = Array.prototype.slice.call(root.querySelectorAll('.nova-reel'));
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var saveData = navigator.connection && navigator.connection.saveData;
+
+    function load(video) {
+      var s = video.querySelector('source[data-src]');
+      if (s) { s.src = s.getAttribute('data-src'); s.removeAttribute('data-src'); video.load(); }
+    }
+    function pauseOthers(except) {
+      reels.forEach(function (r) { if (r !== except && r.classList.contains('is-playing')) stop(r); });
+    }
+    function setPlaying(reel, on) {
+      reel.classList.toggle('is-playing', on);
+      var t = reel.querySelector('.nova-reel__toggle');
+      t.setAttribute('aria-pressed', on ? 'true' : 'false');
+      t.setAttribute('aria-label', (on ? 'Pause video' : 'Play video'));
+    }
+    function stop(reel) {
+      var v = reel.querySelector('video');
+      v.pause(); v.muted = true;
+      var snd = reel.querySelector('.nova-reel__sound');
+      snd.setAttribute('aria-pressed', 'false'); snd.setAttribute('aria-label', 'Turn sound on');
+      setPlaying(reel, false);
+    }
+    reels.forEach(function (reel) {
+      var v = reel.querySelector('video');
+      reel.querySelector('.nova-reel__toggle').addEventListener('click', function () {
+        if (reel.classList.contains('is-playing')) { stop(reel); return; }
+        pauseOthers(reel);
+        reel.classList.remove('is-previewing');
+        load(v);
+        v.currentTime = reel.dataset.started ? v.currentTime : 0;
+        reel.dataset.started = '1';
+        var p = v.play();
+        if (p && p.catch) p.catch(function () {});
+        setPlaying(reel, true);
+      });
+      reel.querySelector('.nova-reel__sound').addEventListener('click', function (e) {
+        e.stopPropagation();
+        v.muted = !v.muted;
+        this.setAttribute('aria-pressed', v.muted ? 'false' : 'true');
+        this.setAttribute('aria-label', v.muted ? 'Turn sound on' : 'Turn sound off');
+      });
+    });
+
+    if (!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var reel = en.target, v = reel.querySelector('video');
+        if (en.isIntersecting) {
+          if (reel.dataset.autoplay === 'true' && !reduce && !saveData && !reel.classList.contains('is-playing')) {
+            load(v); v.muted = true;
+            var p = v.play(); if (p && p.catch) p.catch(function () {});
+            reel.classList.add('is-previewing');
+          }
+        } else {
+          if (reel.classList.contains('is-playing')) stop(reel);
+          if (reel.classList.contains('is-previewing')) { v.pause(); reel.classList.remove('is-previewing'); }
+        }
+      });
+    }, { threshold: 0.6 });
+    reels.forEach(function (r) { io.observe(r); });
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Nova product videos",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "caption", "label": "Small caption", "default": "In action" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "See Quality in Every Detail" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Discover how NovaCrest products make everyday tasks simpler." },
+    { "type": "text", "id": "link_label", "label": "Product link label", "default": "Shop now" },
+    { "type": "checkbox", "id": "muted_preview", "label": "Play a silent preview while a video is on screen", "info": "Always muted. Skipped for visitors with data-saver or reduced motion turned on.", "default": true },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 88 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 88 }
+  ],
+  "blocks": [
+    {
+      "type": "reel",
+      "name": "Video",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product", "info": "Its first video is used when no video is uploaded below. Also adds a Shop now link." },
+        { "type": "video", "id": "video", "label": "Video (optional)", "info": "Upload a vertical (9:16) MP4 of the real product. Overrides the product's own video." },
+        { "type": "text", "id": "title", "label": "Title (optional)", "info": "Defaults to the product name." }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [ { "name": "Nova product videos" } ]
+}
+{% endschema %}

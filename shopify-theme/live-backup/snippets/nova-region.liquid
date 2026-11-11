@@ -1,0 +1,29 @@
+{%- doc -%}
+  Sets html[data-region] to "in" (India) or "intl" so India-only offers (free shipping, COD) are hidden from international buyers.
+  Uses the buyer's chosen Shopify market first, then Shopify's detected country when no market was chosen.
+{%- enddoc -%}
+<script>
+  (function () {
+    var root = document.documentElement;
+    var liquidRegion = {% if localization.country.iso_code == 'IN' %}'in'{% else %}'intl'{% endif %};
+    var chosen = document.cookie.indexOf('localization=') !== -1;
+    var cached = null;
+    try { cached = sessionStorage.getItem('novaRegion'); } catch (e) {}
+    root.dataset.region = chosen ? liquidRegion : cached || liquidRegion;
+    if (chosen || cached) return;
+    fetch('/browsing_context_suggestions.json?country[enabled]=true')
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var c = d && d.detected_values && d.detected_values.country && d.detected_values.country.handle;
+        if (!c) return;
+        var region = c === 'IN' ? 'in' : 'intl';
+        root.dataset.region = region;
+        try { sessionStorage.setItem('novaRegion', region); } catch (e) {}
+      })
+      .catch(function () {});
+  })();
+</script>
+<style>
+  html[data-region='in'] .nova-only-intl,
+  html[data-region='intl'] .nova-only-in { display: none !important; }
+</style>

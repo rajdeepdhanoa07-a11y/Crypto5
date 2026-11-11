@@ -1,0 +1,93 @@
+{%- comment -%} NovaCrest premium split hero — ivory bg left, image right, black/gold accents. {%- endcomment -%}
+<section class="nova-hero">
+  <div class="nova-hero__inner">
+
+    <div class="nova-hero__content">
+      <span class="nova-hero__eyebrow">{{ section.settings.caption | default: 'Kitchen &amp; Home' | escape }}</span>
+      <h1 class="nova-hero__heading">{{ section.settings.heading | escape }}</h1>
+      {%- if section.settings.subtext != blank -%}
+        <p class="nova-hero__sub">{{ section.settings.subtext | escape }}</p>
+      {%- endif -%}
+      <div class="nova-hero__actions">
+        {%- if section.settings.btn1_label != blank -%}
+          <a href="{{ section.settings.btn1_link }}" class="button nova-hero__btn-primary">{{ section.settings.btn1_label | escape }}</a>
+        {%- endif -%}
+        {%- if section.settings.btn2_label != blank -%}
+          <a href="{{ section.settings.btn2_link }}" class="nova-hero__btn-ghost">{{ section.settings.btn2_label | escape }}</a>
+        {%- endif -%}
+      </div>
+      <ul class="nova-hero__trust" aria-label="Trust signals">
+        <li>✦ Made in India</li>
+        <li>✦ Free Shipping on Prepaid</li>
+        <li>✦ 7-Day Returns</li>
+      </ul>
+    </div>
+
+    <div class="nova-hero__image-wrap">
+      {%- if section.settings.image != blank -%}
+        {%- assign img = section.settings.image -%}
+        <img
+          src="{{ img | image_url: width: 1200 }}"
+          srcset="{{ img | image_url: width: 600 }} 600w, {{ img | image_url: width: 900 }} 900w, {{ img | image_url: width: 1200 }} 1200w"
+          sizes="(max-width: 989px) 100vw, 55vw"
+          alt="{{ section.settings.heading | escape }}"
+          loading="eager"
+          width="{{ img.width }}" height="{{ img.height }}"
+          class="nova-hero__img">
+      {%- else -%}
+        <div class="nova-hero__placeholder">{{ 'product-1' | placeholder_svg_tag }}</div>
+      {%- endif -%}
+      <div class="nova-hero__img-accent" aria-hidden="true"></div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .nova-hero { background: #F8F6F1; overflow: hidden; position: relative; }
+  .nova-hero__inner { display: grid; grid-template-columns: 45fr 55fr; min-height: 72vh; align-items: center; max-width: 1600px; margin: 0 auto; }
+  .nova-hero__content { padding: 7rem 5rem 7rem 6rem; display: flex; flex-direction: column; align-items: flex-start; gap: 2.2rem; position: relative; z-index: 1; }
+  .nova-hero__eyebrow { display: inline-block; font-family: var(--font-body-family); font-size: 1.1rem; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: #C6A46A; padding-bottom: 1rem; border-bottom: 1px solid rgba(198,164,106,.5); }
+  .nova-hero__heading { font-size: clamp(3.2rem, 4vw, 5.6rem); font-weight: 400; line-height: 1.08; letter-spacing: -.025em; color: #111111; margin: 0; max-width: 14em; }
+  .nova-hero__sub { font-size: 1.5rem; line-height: 1.65; color: #555555; margin: 0; max-width: 44rem; }
+  .nova-hero__actions { display: flex; gap: 1.4rem; flex-wrap: wrap; align-items: center; margin-top: .4rem; }
+  .nova-hero__btn-primary { background: #111111; color: #ffffff; border: none; min-height: 5.4rem; padding: 0 3.2rem; font-family: var(--font-body-family); font-size: 1.25rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; transition: background .25s, color .25s; cursor: pointer; }
+  .nova-hero__btn-primary:hover { background: #C6A46A; color: #111111; }
+  .nova-hero__btn-ghost { font-family: var(--font-body-family); font-size: 1.2rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: #111111; text-decoration: none; border-bottom: 1px solid rgba(17,17,17,.4); padding-bottom: .2rem; transition: color .2s, border-color .2s; }
+  .nova-hero__btn-ghost:hover { color: #C6A46A; border-color: #C6A46A; }
+  .nova-hero__trust { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .8rem 2rem; margin-top: .4rem; }
+  .nova-hero__trust li { font-family: var(--font-body-family); font-size: 1.1rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: #333333; opacity: .7; }
+  .nova-hero__image-wrap { position: relative; height: 100%; min-height: 60vh; overflow: hidden; }
+  .nova-hero__img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .8s ease; }
+  .nova-hero:hover .nova-hero__img { transform: scale(1.02); }
+  .nova-hero__placeholder { width: 100%; height: 100%; background: #e8e4de; display: flex; align-items: center; justify-content: center; }
+  .nova-hero__img-accent { position: absolute; bottom: 2.4rem; left: -1px; width: 4rem; height: 4rem; border-left: 2px solid #C6A46A; border-bottom: 2px solid #C6A46A; pointer-events: none; }
+  @media screen and (max-width: 1199px) { .nova-hero__content { padding: 6rem 4rem 6rem 4rem; } }
+  @media screen and (max-width: 989px) {
+    .nova-hero__inner { grid-template-columns: 1fr; min-height: unset; }
+    .nova-hero__image-wrap { min-height: 56vw; order: -1; }
+    .nova-hero__img-accent { display: none; }
+    .nova-hero__content { padding: 4rem 2rem 5rem; align-items: center; text-align: center; }
+    .nova-hero__eyebrow { border-bottom: 0; padding-bottom: 0; }
+    .nova-hero__actions { justify-content: center; }
+    .nova-hero__trust { justify-content: center; }
+    .nova-hero__heading { font-size: clamp(3rem, 7vw, 4.4rem); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Premium hero",
+  "settings": [
+    { "type": "text",         "id": "caption",    "label": "Gold eyebrow text",     "default": "Kitchen & Home" },
+    { "type": "text",         "id": "heading",    "label": "Main heading",          "default": "Beautiful Essentials for Kitchen & Home" },
+    { "type": "text",         "id": "subtext",    "label": "Subtext",               "default": "Stainless-steel kitchenware and handcrafted décor, made in India and shipped worldwide." },
+    { "type": "image_picker", "id": "image",      "label": "Image (right side)" },
+    { "type": "text",         "id": "btn1_label", "label": "Primary button",        "default": "Shop Our Favourites" },
+    { "type": "url",          "id": "btn1_link",  "label": "Primary button link" },
+    { "type": "text",         "id": "btn2_label", "label": "Secondary button",      "default": "Shop by Category" },
+    { "type": "url",          "id": "btn2_link",  "label": "Secondary button link" }
+  ],
+  "presets": [{ "name": "Premium hero" }]
+}
+{% endschema %}

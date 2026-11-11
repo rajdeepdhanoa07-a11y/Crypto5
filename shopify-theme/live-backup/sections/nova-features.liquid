@@ -1,0 +1,148 @@
+{%- doc -%}
+  Icon feature grid for trust points and benefits. Uses the theme's icon assets via icon-accordion.
+{%- enddoc -%}
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+  .nova-features__header { text-align: center; max-width: 64rem; margin: 0 auto 3.2rem; }
+  .nova-features__header .h2 { margin: 0 0 0.8rem; }
+  .nova-features__subheading { margin: 0; opacity: 0.8; }
+  .nova-features__grid {
+    display: grid;
+    gap: 2.4rem 2rem;
+    grid-template-columns: repeat({{ section.settings.columns_mobile }}, minmax(0, 1fr));
+    list-style: none; margin: 0; padding: 0;
+  }
+  @media screen and (min-width: 750px) {
+    .nova-features__grid { grid-template-columns: repeat({{ section.settings.columns_desktop }}, minmax(0, 1fr)); gap: 3.2rem; }
+  }
+  .nova-features__grid > li { min-width: 0; }
+  .nova-features__item { text-align: {{ section.settings.alignment }}; }
+  .nova-features--compact .nova-features__item { display: flex; align-items: center; gap: 1rem; text-align: left; justify-content: center; }
+  .nova-features__icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 5.6rem; height: 5.6rem; border-radius: 50%;
+    border: 1px solid rgba(var(--color-foreground), 0.18);
+    background: linear-gradient(145deg, rgba(var(--color-foreground), 0.04), rgba(var(--color-foreground), 0.10));
+    margin-bottom: 1.6rem; flex-shrink: 0;
+  }
+  .nova-features--compact .nova-features__icon { width: 3.6rem; height: 3.6rem; margin-bottom: 0; }
+  .nova-features__icon .svg-wrapper, .nova-features__icon svg { width: 2.4rem; height: 2.4rem; }
+  .nova-features--compact .nova-features__icon .svg-wrapper, .nova-features--compact .nova-features__icon svg { width: 1.8rem; height: 1.8rem; }
+  .nova-features__title { margin: 0 0 0.6rem; font-size: 1.8rem; }
+  .nova-features--compact .nova-features__title { margin: 0; font-size: 1.5rem; font-weight: 600; }
+  .nova-features__text { margin: 0; font-size: 1.5rem; line-height: 1.6; opacity: 0.85; }
+  .nova-features__text p { margin: 0; }
+  .nova-features__buttons { margin-top: 3.2rem; text-align: center; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div
+    class="page-width section-{{ section.id }}-padding nova-features{% if section.settings.compact %} nova-features--compact{% endif %}"
+  >
+    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div class="nova-features__header">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="h2 inline-richtext">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <div class="nova-features__subheading rte">{{ section.settings.subheading }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    <ul class="nova-features__grid" role="list">
+      {%- for block in section.blocks -%}
+        <li class="nova-features__item{% if block.settings.region == 'in' %} nova-only-in{% elsif block.settings.region == 'intl' %} nova-only-intl{% endif %}" {{ block.shopify_attributes }}>
+          <span class="nova-features__icon" aria-hidden="true">
+            {%- render 'icon-accordion', icon: block.settings.icon -%}
+          </span>
+          <div>
+            {%- if block.settings.title != blank -%}
+              <h3 class="nova-features__title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+            {%- if block.settings.text != blank and section.settings.compact == false -%}
+              <div class="nova-features__text rte">{{ block.settings.text }}</div>
+            {%- endif -%}
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+    {%- if section.settings.button_label != blank or section.settings.button_label_2 != blank -%}
+      <div class="nova-features__buttons">
+        {%- if section.settings.button_label != blank -%}
+          <a href="{{ section.settings.button_link }}" class="button">{{ section.settings.button_label | escape }}</a>
+        {%- endif -%}
+        {%- if section.settings.button_label_2 != blank -%}
+          <a href="{{ section.settings.button_link_2 }}" class="button button--secondary">
+            {{- section.settings.button_label_2 | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Nova icon features",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Heading" },
+    { "type": "richtext", "id": "subheading", "label": "Subheading" },
+    { "type": "checkbox", "id": "compact", "label": "Compact (icon + title in a row, for trust bars)", "default": false },
+    { "type": "range", "id": "columns_desktop", "label": "Columns on desktop", "min": 1, "max": 6, "step": 1, "default": 4 },
+    { "type": "select", "id": "columns_mobile", "label": "Columns on mobile", "options": [ { "value": "1", "label": "1" }, { "value": "2", "label": "2" } ], "default": "2" },
+    { "type": "select", "id": "alignment", "label": "Alignment", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" } ], "default": "center" },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "text", "id": "button_label_2", "label": "Second button label" },
+    { "type": "url", "id": "button_link_2", "label": "Second button link" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 56 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 56 }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "map_pin", "label": "Map pin" },
+            { "value": "check_mark", "label": "Check mark" },
+            { "value": "ruler", "label": "Ruler" },
+            { "value": "plane", "label": "Plane" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "box", "label": "Box" },
+            { "value": "price_tag", "label": "Price tag" },
+            { "value": "return", "label": "Return" },
+            { "value": "lock", "label": "Lock" },
+            { "value": "chat_bubble", "label": "Chat bubble" },
+            { "value": "star", "label": "Star" },
+            { "value": "serving_dish", "label": "Serving dish" },
+            { "value": "iron", "label": "Iron" },
+            { "value": "heart", "label": "Heart" }
+          ],
+          "default": "check_mark"
+        },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "select", "id": "region", "label": "Show to", "options": [ { "value": "all", "label": "Everyone" }, { "value": "in", "label": "Buyers in India only" }, { "value": "intl", "label": "International buyers only" } ], "default": "all" },
+        { "type": "richtext", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "Nova icon features" } ]
+}
+{% endschema %}

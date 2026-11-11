@@ -1,0 +1,559 @@
+{
+  "sections": {
+    "hero": {
+      "type": "nova-hero",
+      "settings": {
+        "layout": "full",
+        "caption": "NovaCrest Kitchen",
+        "heading": "Elevate Your Everyday Living.",
+        "subtext": "Discover thoughtfully designed kitchen essentials that bring quality, simplicity and elegance to your everyday routine.",
+        "image": "shopify://shop_images/Fresh_Vegetables_on_Stainless_Steel_Board.png",
+        "height": 86,
+        "overlay": 40,
+        "btn1_label": "Shop Collection",
+        "btn1_link": "shopify://collections/stainless-steel-kitchen-products",
+        "btn2_label": "Explore Our Products",
+        "btn2_link": "/collections/all"
+      }
+    },
+    "strip": {
+      "type": "nova-marquee",
+      "blocks": {
+        "m1": {
+          "type": "item",
+          "settings": {
+            "text": "Designed for Everyday Living",
+            "region": "all"
+          }
+        },
+        "m2": {
+          "type": "item",
+          "settings": {
+            "text": "Premium Kitchen Essentials",
+            "region": "all"
+          }
+        },
+        "m3": {
+          "type": "item",
+          "settings": {
+            "text": "Smarter Products. Better Everyday Experiences.",
+            "region": "all"
+          }
+        },
+        "m4": {
+          "type": "item",
+          "settings": {
+            "text": "Enjoy 10% off with code [CODE]",
+            "region": "all"
+          }
+        }
+      },
+      "block_order": [
+        "m1",
+        "m2",
+        "m3",
+        "m4"
+      ],
+      "settings": {
+        "code": "WELCOME10",
+        "speed": 70,
+        "color_scheme": "scheme-2"
+      }
+    },
+    "featured": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "stainless-steel-kitchen-products",
+        "products_to_show": 8,
+        "title": "Designed for Everyday Living",
+        "heading_size": "h1",
+        "description": "<p>Explore practical essentials designed to make your kitchen more functional and elegant.</p>",
+        "show_description": true,
+        "description_style": "body",
+        "columns_desktop": 4,
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "color_scheme": "scheme-2",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "standard",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 88,
+        "padding_bottom": 72
+      }
+    },
+    "reels": {
+      "type": "nova-video-reels",
+      "blocks": {
+        "v1": {
+          "type": "reel",
+          "settings": {
+            "product": "wedding-shagun-money-holder-custom-name",
+            "title": ""
+          }
+        }
+      },
+      "block_order": [
+        "v1"
+      ],
+      "settings": {
+        "caption": "In action",
+        "heading": "See Quality in Every Detail",
+        "subheading": "Discover how NovaCrest products make everyday tasks simpler.",
+        "link_label": "Shop now",
+        "muted_preview": true,
+        "color_scheme": "scheme-5",
+        "padding_top": 88,
+        "padding_bottom": 88
+      }
+    },
+    "offer": {
+      "type": "nova-offer",
+      "settings": {
+        "caption": "Exclusive offer",
+        "heading": "A Little Something Extra",
+        "subheading": "Enjoy 10% OFF your order. Upgrade your everyday essentials for less.",
+        "code": "WELCOME10",
+        "code_note": "[CODE] – Get 10% off",
+        "copy_label": "Copy code",
+        "auto_apply": true,
+        "end_date": "",
+        "end_time": "23:59",
+        "utc_offset": "+05:30",
+        "button_label": "Shop Collection",
+        "button_link": "shopify://collections/stainless-steel-kitchen-products",
+        "padding_top": 88,
+        "padding_bottom": 88
+      }
+    },
+    "categories": {
+      "type": "collection-list",
+      "blocks": {
+        "c1": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "kitchen-dining"
+          }
+        },
+        "c2": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "led-lamps-lighting"
+          }
+        },
+        "c3": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "wooden-decor"
+          }
+        },
+        "c4": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "gifts-personalized"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "settings": {
+        "title": "Shop by Category",
+        "heading_size": "h1",
+        "image_ratio": "portrait",
+        "columns_desktop": 4,
+        "color_scheme": "scheme-2",
+        "show_view_all": false,
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 88,
+        "padding_bottom": 56
+      }
+    },
+    "editorial": {
+      "type": "image-with-text",
+      "blocks": {
+        "cap": {
+          "type": "caption",
+          "settings": {
+            "caption": "Our Philosophy",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium"
+          }
+        },
+        "h": {
+          "type": "heading",
+          "settings": {
+            "heading": "Thoughtfully Designed. Made for Everyday Living.",
+            "heading_size": "h1"
+          }
+        },
+        "t": {
+          "type": "text",
+          "settings": {
+            "text": "<p>At NovaCrest, we believe everyday essentials should combine functionality, simplicity and timeless design. Our goal is to bring practical products into your home that make daily routines more convenient.</p>",
+            "text_style": "body"
+          }
+        },
+        "b": {
+          "type": "button",
+          "settings": {
+            "button_label": "About NovaCrest",
+            "button_link": "shopify://pages/about-us",
+            "button_style_secondary": true
+          }
+        }
+      },
+      "block_order": [
+        "cap",
+        "h",
+        "t",
+        "b"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/Premium_Stainless_Steel_Chopping_Board_fe1bc7ba-a317-4b5e-b504-995cf23a83ff.png",
+        "height": "large",
+        "desktop_image_width": "large",
+        "layout": "image_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "scheme-2",
+        "color_scheme": "scheme-2",
+        "padding_top": 88,
+        "padding_bottom": 88
+      }
+    },
+    "why": {
+      "type": "nova-features",
+      "blocks": {
+        "w0": {
+          "type": "feature",
+          "settings": {
+            "icon": "check_mark",
+            "title": "Quality-Focused Design",
+            "region": "all",
+            "text": "<p>Thoughtfully selected products for everyday use.</p>"
+          }
+        },
+        "w1": {
+          "type": "feature",
+          "settings": {
+            "icon": "serving_dish",
+            "title": "Everyday Functionality",
+            "region": "all",
+            "text": "<p>Practical essentials designed around your daily needs.</p>"
+          }
+        },
+        "w2": {
+          "type": "feature",
+          "settings": {
+            "icon": "lock",
+            "title": "Secure Shopping",
+            "region": "all",
+            "text": "<p>Shop through our secure checkout.</p>"
+          }
+        },
+        "w3": {
+          "type": "feature",
+          "settings": {
+            "icon": "chat_bubble",
+            "title": "Customer Support",
+            "region": "all",
+            "text": "<p>We're here to help with your shopping experience.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "w0",
+        "w1",
+        "w2",
+        "w3"
+      ],
+      "settings": {
+        "heading": "Why Choose NovaCrest?",
+        "subheading": "",
+        "compact": false,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "alignment": "center",
+        "button_label": "",
+        "button_link": "",
+        "button_label_2": "",
+        "button_link_2": "",
+        "color_scheme": "scheme-2",
+        "padding_top": 88,
+        "padding_bottom": 88
+      }
+    },
+    "reviews": {
+      "type": "apps",
+      "blocks": {
+        "jm": {
+          "type": "shopify://apps/judge-me-reviews/blocks/cards_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "show_sample_reviews": false,
+            "reviews_selection": "all",
+            "products": [
+              "stainless-steel-chopping-board-35-28-cm",
+              "stainless-steel-chopping-board-35-5-30-cm",
+              "stainless-steel-wave-design-napkin-holder"
+            ],
+            "filter_pinned": true,
+            "filter_featured": false,
+            "filter_custom_tags": "",
+            "star_rating": "all",
+            "show_review_media": true,
+            "display_order": "media_first",
+            "no_image_fallback": "review_text_only",
+            "max_reviews": 20,
+            "review_length": "medium",
+            "text_size": "small",
+            "image_ratio": "1",
+            "reviews_shown": 3,
+            "show_reviewer_name": true,
+            "show_product_name": true,
+            "hide_arrows_mobile": true,
+            "arrows_position": "bottom",
+            "max_width": 1200,
+            "corner_styling": "square",
+            "header_text_color": "#111111",
+            "text_color": "#333333",
+            "card_color": "#ffffff",
+            "stars_color": "#111111",
+            "arrows_color": "#111111",
+            "transition_speed": 5,
+            "header_text": "Trusted by Customers",
+            "show_average_rating": true,
+            "rating_display": "default"
+          }
+        }
+      },
+      "block_order": [
+        "jm"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "faq": {
+      "type": "collapsible-content",
+      "blocks": {
+        "q0": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What products does NovaCrest sell?",
+            "icon": "none",
+            "row_content": "<p>Stainless steel kitchen products, LED lamps, wooden décor and custom-made products. <a href=\"/collections/stainless-steel-kitchen-products\">Shop all products</a>.</p>",
+            "page": ""
+          }
+        },
+        "q1": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Are NovaCrest products manufactured in India?",
+            "icon": "none",
+            "row_content": "<p>Yes. NovaCrest manufactures its products in India.</p>",
+            "page": ""
+          }
+        },
+        "q2": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Do you ship internationally?",
+            "icon": "none",
+            "row_content": "<p>Yes. We ship worldwide from India. Shipping charges are shown at checkout.</p>",
+            "page": ""
+          }
+        },
+        "q3": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Is it safe to pay online?",
+            "icon": "none",
+            "row_content": "<p>Yes. Secure, encrypted checkout. Pay with UPI, debit or credit cards, netbanking, or Cash on Delivery within India.</p>",
+            "page": ""
+          }
+        },
+        "q4": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Is shipping free?",
+            "icon": "none",
+            "row_content": "<p>Delivery is free on prepaid orders within India.</p>",
+            "page": ""
+          }
+        },
+        "q5": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "How long does delivery take?",
+            "icon": "none",
+            "row_content": "<p>India: 3–7 days. International: depends on destination, tracking shared by email.</p>",
+            "page": ""
+          }
+        },
+        "q6": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What is the return policy?",
+            "icon": "none",
+            "row_content": "<p>Contact us within 7 days of delivery if the item arrives damaged or incorrect. <a href=\"/pages/return-policy\">Full policy</a>.</p>",
+            "page": ""
+          }
+        },
+        "q7": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Do you accept wholesale or custom orders?",
+            "icon": "none",
+            "row_content": "<p>Yes. Email <a href=\"mailto:novacresttrading@gmail.com\">novacresttrading@gmail.com</a> or see <a href=\"/pages/wholesale-export\">Wholesale &amp; Export</a>.</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "q0",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7"
+      ],
+      "settings": {
+        "caption": "",
+        "heading": "Frequently Asked Questions",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "layout": "none",
+        "container_color_scheme": "scheme-2",
+        "color_scheme": "scheme-2",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 88,
+        "padding_bottom": 56
+      }
+    },
+    "wholesale": {
+      "type": "rich-text",
+      "blocks": {
+        "cap": {
+          "type": "caption",
+          "settings": {
+            "caption": "For Businesses",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium"
+          }
+        },
+        "h": {
+          "type": "heading",
+          "settings": {
+            "heading": "Wholesale & Bulk Orders",
+            "heading_size": "h1"
+          }
+        },
+        "t": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Looking for wholesale, bulk or export quantities? NovaCrest supplies retailers, distributors, restaurants, businesses and international buyers, with custom designs available on request.</p>"
+          }
+        },
+        "b": {
+          "type": "button",
+          "settings": {
+            "button_label": "Wholesale & Export Enquiries",
+            "button_link": "shopify://pages/wholesale-export",
+            "button_style_secondary": false,
+            "button_label_2": "Custom Product Enquiry",
+            "button_link_2": "shopify://pages/contact",
+            "button_style_secondary_2": true
+          }
+        }
+      },
+      "block_order": [
+        "cap",
+        "h",
+        "t",
+        "b"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-5",
+        "full_width": true,
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "question": {
+      "type": "rich-text",
+      "blocks": {
+        "h": {
+          "type": "heading",
+          "settings": {
+            "heading": "A question before ordering?",
+            "heading_size": "h1"
+          }
+        },
+        "t": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Message us on WhatsApp or email. We usually reply within a few hours.</p>"
+          }
+        },
+        "b": {
+          "type": "button",
+          "settings": {
+            "button_label": "WhatsApp Us",
+            "button_link": "https://wa.me/919530746854",
+            "button_style_secondary": false,
+            "button_label_2": "See the FAQ",
+            "button_link_2": "shopify://pages/faq",
+            "button_style_secondary_2": true
+          }
+        }
+      },
+      "block_order": [
+        "h",
+        "t",
+        "b"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-2",
+        "full_width": true,
+        "padding_top": 24,
+        "padding_bottom": 88
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "strip",
+    "featured",
+    "reels",
+    "offer",
+    "categories",
+    "editorial",
+    "why",
+    "reviews",
+    "faq",
+    "wholesale",
+    "question"
+  ]
+}

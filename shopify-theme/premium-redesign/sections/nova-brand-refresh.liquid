@@ -1,0 +1,14 @@
+{%- comment -%} 2026 brand refresh: final palette (#111 / #fff / #f7f7f7 / #777 / #e8e8e8) and card polish. Loads after Nova premium style. {%- endcomment -%}
+<style>
+  :root { --nova-soft: #f7f7f7; --nova-muted: #777777; --nova-line: #e8e8e8; }
+  .color-scheme-5 { --color-background: 247,247,247; --gradient-background: #f7f7f7; --color-secondary-button: 247,247,247; --color-badge-background: 247,247,247; --payment-terms-background-color: #f7f7f7; }
+  .card-wrapper .card__media img { transition: transform .6s cubic-bezier(.2,.6,.2,1), opacity .4s ease; }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) { .card-wrapper:hover .card__media img:first-child { transform: scale(1.03); } }
+  .card__heading { font-family: var(--font-body-family); font-size: 1.5rem; font-weight: 400; letter-spacing: .02em; line-height: 1.4; }
+  .card-information .price { font-size: 1.45rem; letter-spacing: .04em; }
+  .price__sale .price-item--regular { color: var(--nova-muted); }
+  html, body { overflow-x: clip; }
+</style>
+{% schema %}
+{ "name": "Nova brand refresh", "settings": [], "enabled_on": { "groups": ["footer"] } }
+{% endschema %}
