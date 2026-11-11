@@ -8,6 +8,14 @@
   .card-information .price { font-size: 1.45rem; letter-spacing: .04em; }
   .price__sale .price-item--regular { color: var(--nova-muted); }
   html, body { overflow-x: clip; }
+  /* Newsletter email box on dark backgrounds (footer): white box needs dark text */
+  .color-scheme-3 .field__input, .color-scheme-4 .field__input { color: #111111 !important; caret-color: #111111; -webkit-text-fill-color: #111111; }
+  .color-scheme-3 .field__input::placeholder, .color-scheme-4 .field__input::placeholder { color: #777777; opacity: 1; -webkit-text-fill-color: #777777; }
+  .color-scheme-3 .field__label, .color-scheme-4 .field__label { color: #777777 !important; }
+  .color-scheme-3 .field:after, .color-scheme-4 .field:after { box-shadow: 0 0 0 1px #ffffff !important; }
+  .color-scheme-3 .newsletter-form__button, .color-scheme-4 .newsletter-form__button { color: #111111 !important; }
+  .color-scheme-3 .newsletter-form__button .svg-wrapper svg, .color-scheme-4 .newsletter-form__button .svg-wrapper svg { color: #111111; fill: currentColor; }
+  .color-scheme-3 .field__input:-webkit-autofill, .color-scheme-4 .field__input:-webkit-autofill { -webkit-box-shadow: 0 0 0 100px #ffffff inset !important; -webkit-text-fill-color: #111111 !important; }
 </style>
 {% schema %}
 { "name": "Nova brand refresh", "settings": [], "enabled_on": { "groups": ["footer"] } }
